@@ -34,7 +34,7 @@ Syntax highlighted code block
 
 **Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
+[Link](url) and ![Image](hw3_img.png)
 
 ```
 ![alt text](hw3_img.png)
