@@ -1,16 +1,24 @@
-## Welcome to GitHub Pages
+## Motivation
 
-You can use the [editor on GitHub](https://github.com/umasreeram/fraud-detection-page.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. We are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
+## Data
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
+## Experiments
 
+### Preprocessing
+- Dealing with missing values
+- Dropping correlated V columns
+- Describe multiple datasets tried
+### Logistic Regression
+- Dealing with class imbalance
+- ...
+### LGBM
+### XGBoost
 
-
+## Results & Discussion
 
 
 
