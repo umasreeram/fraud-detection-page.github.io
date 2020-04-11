@@ -1,6 +1,6 @@
 ## Motivation
 
-Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. The e-commerce industry is able to collect a vast amount of data on indivudal transactions and can use that data to identify fraudsters. We are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation. 
+Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. Online payment service companies are able to collect a vast amount of data on individuals and their transactions and use modeling to distinguish between fraudulent and non-fraudulent behaviors. In order to building our modeling skills and explore the field of fraud detection, we are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation.
 
 ## Data & Preprocessing
 
