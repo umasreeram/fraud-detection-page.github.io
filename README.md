@@ -1,31 +1,36 @@
 ## Motivation
 
-Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. We are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation. 
+Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. The e-commerce industry is able to collect a vast amount of data on indivudal transactions and can use that data to identify fraudsters. We are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation. 
 
-## Data
+## Data & Preprocessing
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-## Experiments
+- Add description of data (can take a lot from Kaggle post)
 
 ### Preprocessing
 - Dealing with missing values
 - Dropping correlated V columns
 - Describe multiple datasets tried
-### Logistic Regression
-- Dealing with class imbalance
+
+## Experiments & Results
+
+### Approach 1: Logistic Regression
+
+We first began modeling with the simpliest binary classification model we knew - logisitic regression. 
+- How we dealt with class imbalance
 - ...
-### LGBM
-### XGBoost
 
-## Results & Discussion
+### Approach 2: LGBM
 
 
+### Approach 3: XGBoost
+
+## Discussion
+- Add Uma's findings here
+
+
+# Template Info Below (Will not be in final report)
 
 ## Yo guys we will put our final results here!!!!
-
-
-
 
 ```markdown
 Syntax highlighted code block
