@@ -16,7 +16,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 #### Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
 
-**Logistic Regression
+**Logistic Regression**
 - Feature selection (Chi squared/ANOVA tests)
 - Dealing with class imbalance
 	- random undersampling
@@ -26,13 +26,13 @@ We began our modeling with a simple logisitic regression model which would serve
 #### Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
-**Random Forest (Ngan)
+**Random Forest (Ngan)**
 - Results for LGBM X_1, X_2, X_3, X_4 (@Ngan, I think RF don't require dummy data)
 
-**LGBM (Aditi)
+**LGBM (Aditi)**
 - Results for LGBM X_1, X_2, X_3, X_4
 
-**XGBoost (Wendy)
+**XGBoost (Wendy)**
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
 ### Results & Discussion 
