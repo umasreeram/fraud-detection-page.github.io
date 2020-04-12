@@ -16,7 +16,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 #### Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
 
-**Logistic Regression**
+**Logistic Regression (Uma)**
 - Feature selection (Chi squared/ANOVA tests)
 - Dealing with class imbalance
 	- random undersampling
@@ -37,7 +37,7 @@ Compared to logisitic regression, tree based methods are less susceptible to out
 
 ### Results & Discussion 
 - Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
-- Discuss how Vesta could operationalize this, things to consider from Uma's findings (Chitwan?)
+- Discuss how Vesta could operationalize this, things to consider from Uma's findings (Chitwan)
 
 
 
