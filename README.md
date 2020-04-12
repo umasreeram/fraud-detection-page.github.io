@@ -2,33 +2,47 @@
 
 Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. Online payment service companies are able to collect a vast amount of data on individuals and their transactions and use modeling to distinguish between fraudulent and non-fraudulent behaviors. In order to build our modeling skills and explore the field of fraud detection, we are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation.
 
-## Data & Preprocessing
+## Data & Preprocessing (Chitwan)
 
 - Add description of data (can take a lot from Kaggle post)
 
-### Preprocessing
+### Preprocessing (Chitwan)
 - Dealing with missing values
 - Reducing multicollinearity
 - Engineering new features
 
-## Experiments & Results
+## Experiments
 
-### Approach 1: Logistic Regression
+#### Approach 1: Regression Methods
+We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
 
-We first began modeling with the simpliest binary classification model we knew - logisitic regression. 
+Logistic Regression
+- Feature selection (Chi squared/ANOVA tests)
 - Dealing with class imbalance
-- ...
+	- random undersampling
+	- clustered undersampling
+- LR results w/ random undersampling on X_1, X_2
 
-### Approach 2: LGBM
+#### Approach 2: Tree Based Methods
+Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried several tree based methods such as Random Forest, LGBM, and XGBoost. 
+
+Random Forest (Ngan)
+- Results for X_1, X_2, X_3, X_4
+
+LGBM (Aditi)
+- Results for X_1, X_2, X_3, X_4
+
+XGBoost (Wendy)
+- Results for X_1, X_2, X_3, X_4
+
+### Results & Discussion 
+- Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
+- Discuss how Vesta could operationalize this, things to consider from Uma's findings (Chitwan?)
 
 
-### Approach 3: XGBoost
-
-## Discussion
-- Add Uma's findings here
 
 
-# Template Info Below (Will not be in final report)
+# Template info below incase you guys need it (Will not be in final report)
 
 ## Yo guys we will put our final results here!!!!
 
