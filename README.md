@@ -42,14 +42,12 @@ It is computationally and financially expensive to tune the hyperparameters of t
 Table X. Ranked listing of XGBoost hyperparameters tuned
 | Hyperparameters  | Impact on model | Importance |
 | ------------- | ------------- |------------- |
-| n_estimators | Number of decision trees in the model. Too small: hinder predictive ability of the model, too large: computationally intensive, might risk overfitting| High|
-|learning_rate| Too low
-|max_depth| Maximum depth of each decision tree. Too low: underfitting, too high: might lead to overfitting | High|
-|subsample|
-|colsample_bytree|
-|gamma|
-
-
+| n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| High|
+|learning_rate| Impacts the duration needed for the model to converge and performance of the model. | High|
+|max_depth| Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|
+|colsample_bytree| Number of features used by each tree. Lower value means that each tree can only consider a smaller proprtion of total columns. This avoids some columns to take too much credit for the prediction. | High|
+|subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
+|gamma| Regularization parameter | Medium|
 
 
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
