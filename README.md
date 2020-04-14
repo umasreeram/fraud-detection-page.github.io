@@ -4,9 +4,41 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 ## Data & Preprocessing (Chitwan)
 
-- Add description of data (can take a lot from Kaggle post)
+The dataset provided by Vesta included identification and transaction data on a series of online payments. The data contains the following unmasked features.
+
+Table 1A: Unmasked Features
+
+| Feature Name  | Description 
+| ------------- | ------------- 
+| TransactionDT | timedelta from a given reference datetime
+| TransactionAMT | transaction payment amount in USD
+| ProductCD | product code for each transaction
+| addr | address of purchaser
+| P_emaildomain | purchaser's email
+| R_recipientdomain | recipient's email
+| DeviceType | desktop or mobile
+| DeviceInfo | specific machine (e.g. MacBook)
+
+The meaning of the following features were masked but Vesta provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
+
+Table 1B: Masked Features
+
+| Feature Category  | Description 
+| ------------- | ------------- 
+| id12 - id38 | identies, such as network connection, digital signature, etc.
+| card1 - card6 | payment card information, such as card type, card category, issue bank, etc.
+| dist | distance between 2 masked locations
+| C1-C14 | counting, such as how many addresses are found to be associated with the payment card, etc.
+| D1-D15 | timedelta, such as days between previous transaction, etc.
+| M1-M9 | match, such as names on card and address, etc.
+| Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
+
+
+
 - Dealing with missing values
+
 - Reducing multicollinearity
+
 - Engineering new features
 
 ## Methodology (Ngan, Wendy)
@@ -52,6 +84,7 @@ To accelerate our model training and hyperparameters tuning processes, we set up
 It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator. We have to priortize the parameters to be tuned (Table X) and outline a resonable search space. We also used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. Therefore, this method is likely to be more efficient than other more commonly known methods, like GridSearch or random serach.
 
 Table X. Ranked listing of XGBoost hyperparameters tuned
+
 | Hyperparameters  | Impact on model | Importance |
 | ------------- | ------------- |------------- |
 | n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| High|
