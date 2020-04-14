@@ -32,7 +32,25 @@ Compared to logisitic regression, tree based methods are less susceptible to out
 - Results for LGBM X_1, X_2, X_3, X_4
 
 **XGBoost (Wendy)**
+
 XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation uses a histogram-based algorithm to compute the best split.
+
+To accelerate our model training and hyperparameters tuning processes, we set up an AWS EC2 instance with GPU to train the XGBoost model on the cloud. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
+
+It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator. We have to priortize the parameters to be tuned (Table X) and outline a resonable search space. We also used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. Therefore, this Bayesian method is likely to be more efficient than other more commonly known methods, like GridSearch or random serach.
+
+Table X. Ranked listing of XGBoost hyperparameters tuned
+| Hyperparameters  | Impact on model | Importance |
+| ------------- | ------------- |------------- |
+| n_estimators | Number of decision trees in the model. Too small: hinder predictive ability of the model, too large: computationally intensive, might risk overfitting| High|
+|learning_rate| Too low
+|max_depth| Maximum depth of each decision tree. Too low: underfitting, too high: might lead to overfitting | High|
+|subsample|
+|colsample_bytree|
+|gamma|
+
+
+
 
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
