@@ -47,7 +47,7 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 |max_depth| Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|
 |colsample_bytree| Number of features used by each tree. Lower value means that each tree can only consider a smaller proprtion of total columns. This avoids some columns to take too much credit for the prediction. | High|
 |subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
-|gamma| Regularization parameter | Medium|
+|gamma| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|
 
 
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
