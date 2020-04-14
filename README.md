@@ -39,9 +39,28 @@ Random forest is identical to bagging decision tree except it adds additional ra
 For our case, we implemented random forest using the sklearn library "RandomForestClassifier" function. Refer to Table X for a list of hyperparameters and their corresponding search space. 
 
 **LGBM (Aditi)**
+
+- maybe mention sth about "Gradient-based One-Side Sampling (GOSS) to filter out the data instances for finding a split value"
 - Results for LGBM X_1, X_2, X_3, X_4
 
 **XGBoost (Wendy)**
+
+XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation uses a histogram-based algorithm to compute the best split.
+
+To accelerate our model training and hyperparameters tuning processes, we set up an AWS EC2 instance with GPU to train the XGBoost model on the cloud. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
+
+It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator. We have to priortize the parameters to be tuned (Table X) and outline a resonable search space. We also used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. Therefore, this method is likely to be more efficient than other more commonly known methods, like GridSearch or random serach.
+
+Table X. Ranked listing of XGBoost hyperparameters tuned
+| Hyperparameters  | Impact on model | Importance |
+| ------------- | ------------- |------------- |
+| n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| High|
+|learning_rate| Impacts the duration needed for the model to converge and performance of the model. | High|
+|max_depth| Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|
+|colsample_bytree| Number of features used by each tree. Lower value means that each tree can only consider a smaller proprtion of total columns. This avoids some columns to take too much credit for the prediction. | High|
+|subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
+|gamma| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|
+
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
 ### Results & Discussion 
