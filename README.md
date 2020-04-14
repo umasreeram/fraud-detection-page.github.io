@@ -22,15 +22,18 @@ We began our modeling with a simple logisitic regression model which would serve
 - LR results w/ random undersampling on XG_LR X_1, X_2
 
 ### Approach 2: Tree Based Methods
-Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
+Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. We experimented with multiple decision-tree-based ensemble methods, including Random Forest, LGBM, and XGBoost.
 
 **Random Forest (Ngan)**
 - Results for LGBM X_1, X_2, X_3, X_4 (@Ngan, I think RF don't require dummy data)
 
 **LGBM (Aditi)**
+- maybe mention sth about "Gradient-based One-Side Sampling (GOSS) to filter out the data instances for finding a split value"
 - Results for LGBM X_1, X_2, X_3, X_4
 
 **XGBoost (Wendy)**
+XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation uses a histogram-based algorithm to compute the best split.
+
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
 ### Results & Discussion 
