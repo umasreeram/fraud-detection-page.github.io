@@ -63,13 +63,13 @@ After addressing missing values, multicolinearity, and feature engineering we ha
 ## Methodology (Ngan, Wendy)
 
 ### Hyperparamter Tuning and Model Selection
-In this project, we evaluated different classification models to label fraudulent transactions. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [1]. Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation. Some preliminary analysis on the data showed that hold-out sample approach sufficiently captured the generality of the data (appendix??). 
+In this project, we evaluated different classification models to label fraudulent transactions. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [1](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation. Some preliminary analysis on the data showed that hold-out sample approach sufficiently captured the generality of the data (appendix??). 
 
 Figure X shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
 
 Figure X. Nested Validation Methodology Diagram
 
-<img src="Methodology Diagram.png" alt="CorrPlot" width="725"/>
+<img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
 
 
 
