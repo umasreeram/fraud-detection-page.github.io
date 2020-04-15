@@ -62,8 +62,23 @@ After addressing missing values, multicolinearity, and feature engineering we ha
 
 ## Methodology (Ngan, Wendy)
 
-- Describe how data is partioned into different segments and used to tune parameters for each model family and select best model family. Data Leakage discussion? (Ngan)
+### Hyperparamter Tuning and Model Selection
+In this project, we evaluated different classification models to label fraudulent transactions. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [1](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation. Some preliminary analysis on the data showed that hold-out sample approach sufficiently captured the generality of the data (appendix??). 
+
+Figure X shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
+
+Figure X. Nested Validation Methodology Diagram
+
+<img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
+
+
+
+### Parameter Optimization
+
 - Paramter Tuning using Bayes Search Optimization (Wendy)
+
+### Model Performance Metrics
+Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
 
 ## Experiments (Ngan,Uma,Aditi,Wendy)
 
@@ -81,14 +96,30 @@ We began our modeling with a simple logisitic regression model which would serve
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
 **Random Forest (Ngan)**
-- Results for LGBM X_1, X_2, X_3, X_4 (@Ngan, I think RF don't require dummy data. Chitwan, you are correct that RF in theory should be able to handle both numerical and categorical variables. However, random forest in the context of sklearn cannot. It requires numeric data only. People recommend the implementation of H2O library which can handles numeric and categorical variables on its own wo user preprocessing step. (Ref: https://roamanalytics.com/2016/10/28/are-categorical-variables-getting-lost-in-your-random-forests/). Unfortunately, its too late now to try it. Essentialy, they should both work, just sklearn is more computational cost but I already did that ^^!. Also, I have been using X_1 data only. Do I need to do X_2, X_3, X_4? What is the gain? On what data should we report the feature importance (A&B vs A only))? Do we need Kaggle results for all family models (LR, RF, LGBM --- I think no)? 
 
 The most basic tree based model is Decision Tree - a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. Therefore, in random forest, only a random subset of the features is taken into consideration by the algorithm for splitting a node. This results in a wide diversity that generally results in a better model.
 
-For our case, we implemented random forest using the sklearn library "RandomForestClassifier" function. Refer to Table X for a list of hyperparameters and their corresponding search space. 
+In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table X.
 
+Table X: Listing of Random Forest hyperparameters tuned
+
+| Hyperparameters  | Impact on model | Tuned value |
+| ------------- | ------------- | ------------- |
+| n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| 931|
+| max_depth | Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | 32|
+| max_features | The number of features to consider when looking for the best split. Lower value means that each tree can only consider a smaller proportion of total features. This adds randomness to the model and avoids some columns to take too much credit for the prediction. | log2(n_features)|
+| class_weight | Weights associated with classes in the form {class_label: weight}. By default, all classes have the same weight regardless of their count. The 'balanced' mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y)). | 'balanced'|
+
+- Results for XG_LR X_1, X_2:
+
+Random Forest was implemented on both X_1 and X_2 dataset. Refer to Data & Preprocessing Section for more details on different dataset. We observed that random forest's performance on X_1 slightly outperformed that on X_2 dataset with AUC-ROC score of 0.955 compared to 0.947. This is expected as X_1 has more features than X_2, resulting in higher predictive power. 
+
+Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
+
+In conclusion, we proceeded with X_1 features due to its higher performance in AUC-ROC score. 
+ 
 **LGBM (Aditi)**
 
 - maybe mention sth about "Gradient-based One-Side Sampling (GOSS) to filter out the data instances for finding a split value"
@@ -96,7 +127,7 @@ For our case, we implemented random forest using the sklearn library "RandomFore
 
 **XGBoost (Wendy)**
 
-XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation uses a histogram-based algorithm to compute the best split.
+XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation used a histogram-based algorithm to compute the best split.
 
 To accelerate our model training and hyperparameters tuning processes, we set up an AWS EC2 instance with GPU to train the XGBoost model on the cloud. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
@@ -115,28 +146,15 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 
 - Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
-## Results & Discussion 
-- Table X: Model Hyperparameter and search space:
-	- Logistic Regression
-	- Random Forest:
-		- Maximum depth of the tree: 900 - 1200
-		- Number of trees in the forest: 30 - 70
-		- Number of features to consider when looking for the best split: 'auto', 'log2'
-			- 'auto': max_features = sqrt(n_features)
-			- 'log2': max_features = log2(n_features)
-	- LGBM
-	- XGBoost
-- Table X: Best hyperparameters for each family model and their corresponding AUC score on testing data
-	- Logistic Regression
-	- Random Forest:
-		- Maximum depth of the tree: 32
-		- Number of trees in the forest: 931
-		- Number of features to consider when looking for the best split: 'log2'
-		- Class weight: 'balanced' mode uses the values of training class to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))
-	- LGBM
-	- XGBoost
+### Results & Discussion 
+
 - Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
+
 - Discuss how Vesta could operationalize this, things to consider from Uma's findings (Chitwan)
+
+### References
+1. https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html
+2. https://www.kaggle.com/c/ieee-fraud-detection/data
 
 
 
