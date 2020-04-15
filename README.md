@@ -43,7 +43,7 @@ Although other non-Vxxx features are also multicolinear, we decide not to do dro
 
 Figure 1: C features correlation matrix
 
-<img src="C_corrplot.png" alt="CorrPlot" width="500"/>
+<img src="C_corrplot.png" alt="CorrPlot" width="800"/>
 
 **Feature Engineering**
 
