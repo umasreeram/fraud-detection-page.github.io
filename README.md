@@ -69,7 +69,7 @@ Figure X shows the detailed nested validation approach. In the outer loop, train
 
 Figure X. Nested Validation Methodology Diagram
 
-![Image](/Methodology Diagram.png)
+<img src="Methodology Diagram.png" alt="CorrPlot" width="725"/>
 
 
 
