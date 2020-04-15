@@ -22,17 +22,16 @@ Table 1A: Unmasked Features
 The meaning of the following features are masked but Vesta has provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
 
 Table 1B: Masked Features
-<sub>
 | Feature Category  | Description 
 | ------------------- | ------------- 
-| id12 - id38 | identies, such as network connection, digital signature, etc.
+| <sub>id12 - id38</sub> | identies, such as network connection, digital signature, etc.
 | card1 - card6 | payment card information, such as card type, card category, issue bank, etc.
 | dist | distance between 2 masked locations
 | C1-C14 | counting, such as how many addresses are found to be associated with the payment card, etc.
 | D1-D15 | timedelta, such as days between previous transaction, etc.
 | M1-M9 | match, such as names on card and address, etc.
 | Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
-</sub>
+
 
 _**Missing Data**_.
 All except 20 features have some missing values. We drop features where 90-100% of the values are missing. Since our dataset is so large and most of our features are masked, we decide to not pursue any complex data imputation techniques. For models that can't handle missing values such as logisitic regression, we fill NAs with 0. For models that can handle missing values such as XGBoost, we experiment with leaving missing values as is and filling missing values with -999. -999 is well outside the range of typical values and we believe that the model will be able to distinguish these values as missing and ignore them. 
