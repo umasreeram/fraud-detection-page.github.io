@@ -39,9 +39,9 @@ All except 20 features have some missing values. We drop features where 90-100% 
 
 **Multicollinearity**
 
-Many of our features are derived from each other so our predictors are highly multicollinear. Because we want to extract feature importance from our models, we need to reduce multicollinearity. Since the Vxxx features are engineered features and not actual data, we drop one of every two highly correlated features (e.g. Correlation coefficient > 0.75 or Correlation coefficient < -0.75). We drop the feature with fewer number of unqiue values, the intuition being that the feature with greater number of unqiue values contains more "granular" data. 
+Many of our features are derived from each other so our predictors are highly multicollinear. Because we want to extract feature importance from our models, we need to reduce multicollinearity. Since the Vxxx features are engineered features and not actual data, we drop one of every two highly correlated features (e.g. correlation > 0.75 or correlation < -0.75). We drop the feature with fewer number of unqiue values, the intuition being that the feature with greater number of unqiue values contains more "granular" data. 
 
-Although other non-Vxxx features are also multicolinear, we are slightly hesitant to drop them. The non-Vxxx features represent actual data that might be useful in distinguishing between fraud and not fraud. We experiment with two version of the data, one with all non-Vxxx columns included and another with multicollinear non-Vxxx columns dropped.
+Although non-Vxxx features (aka features that are not the Vxxx features) are also multicolinear, we are slightly hesitant to drop them. The non-Vxxx features represent actual data that might be useful in distinguishing between fraud and not fraud. We experiment with two version of the data, one with all non-Vxxx columns included and another with multicollinear non-Vxxx columns dropped.
 
 Figure 1: C features correlation matrix
 
@@ -53,8 +53,12 @@ Our dataset is at the transaction level and our models try to find patterns that
 
 The dataset does not provide a unique user id, so we identify 3 possible combinations of features that could be unqiue to each user: [[card1], [card1 and addr1], [card1, addr1 and P_emaildomain]]. Then for each possible unique id, we add user level mean and standard deviation for TransactionAmt, D9, and D11. Our engineered features closely resemble the strategy detailed by [Konstantin Yakovlev](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda).
 
-After addressing missing values, multicolinearity, and feature engineering we have the following datasets for our experiments.
+After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
+|        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features
+| ------ | ------------------- | ------------- 
+| **keeping NA values** | X1 | X2
+| **filling NA values** | X3 | X4
 
 ## Methodology (Ngan, Wendy)
 
