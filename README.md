@@ -2,9 +2,9 @@
 
 Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. Online payment service companies are able to collect a vast amount of data on individuals and their transactions and use modeling to distinguish between fraudulent and non-fraudulent behaviors. In order to build our modeling skills and explore the field of fraud detection, we are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation.
 
-## Data & Preprocessing (Chitwan)
+## Data & Preprocessing
 
-The dataset provided by Vesta included identification and transaction data on a series of online payments. The data contains the following unmasked features.
+The [dataset](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
 Table 1A: Unmasked Features
 
@@ -19,13 +19,13 @@ Table 1A: Unmasked Features
 | DeviceType | desktop or mobile
 | DeviceInfo | specific machine (e.g. MacBook)
 
-The meaning of the following features were masked but Vesta provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
+The meaning of the following features are masked but Vesta has provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
 
 Table 1B: Masked Features
 
 | Feature Category  | Description 
-| ------------- | ------------- 
-| id12 - id38 | identies, such as network connection, digital signature, etc.
+| ------------------- | ------------- 
+| id12 - id38| identies, such as network connection, digital signature, etc.
 | card1 - card6 | payment card information, such as card type, card category, issue bank, etc.
 | dist | distance between 2 masked locations
 | C1-C14 | counting, such as how many addresses are found to be associated with the payment card, etc.
@@ -33,13 +33,32 @@ Table 1B: Masked Features
 | M1-M9 | match, such as names on card and address, etc.
 | Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
 
+**Missing Data**
 
+All except 20 features have some missing values. We drop features where 90-100% of the values are missing. Since our dataset is so large and most of our features are masked, we decide to not pursue any complex data imputation techniques. For models that can't handle missing values such as logisitic regression, we fill NAs with 0. For models that can handle missing values such as XGBoost, we experiment with leaving missing values as is and filling missing values with -999. -999 is well outside the range of typical values and we believe that the model will be able to distinguish these values as missing and ignore them. 
 
-- Dealing with missing values
+**Multicollinearity**
 
-- Reducing multicollinearity
+Many of our features are derived from each other so our predictors are highly multicollinear. Because we want to extract feature importance from our models, we need to reduce multicollinearity. Since the Vxxx features are engineered features and not actual data, we drop one of every two highly correlated features (e.g. correlation > 0.75 or correlation < -0.75). We drop the feature with fewer number of unqiue values, the intuition being that the feature with greater number of unqiue values contains more "granular" data. 
 
-- Engineering new features
+Although non-Vxxx features (aka features that are not the Vxxx features) are also multicolinear, we are slightly hesitant to drop them. The non-Vxxx features represent actual data that might be useful in distinguishing between fraud and not fraud. We experiment with two version of the data, one with all non-Vxxx columns included and another with multicollinear non-Vxxx columns dropped.
+
+Figure 1: C features correlation matrix
+
+<img src="C_corrplot.png" alt="CorrPlot" width="725"/>
+
+**Feature Engineering**
+
+Our dataset is at the transaction level and our models try to find patterns that distinguish fraudulent behavior from normal behavior. However, fraudulent behavior might differ for each user and one user's fradulent behavior may be another user's normal behavior. We want to identify a unique user id and see how rare or common a transaction is for that specific user. Adding features that represent user level statistics (i.e. mean, standard deviation) can help our model find those patterns. This method of feature engineering is common in LGBMs (Light Gradient Boosting Machine) and is discussed in detail by [Chris Deotte](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841). 
+
+The dataset does not provide a unique user id, so we identify 3 possible combinations of features that could be unqiue to each user: [[card1], [card1 and addr1], [card1, addr1 and P_emaildomain]]. Then for each possible unique id, we add user level mean and standard deviation for TransactionAmt, D9, and D11. Our engineered features closely resemble the strategy detailed by [Konstantin Yakovlev](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda).
+
+After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
+
+|        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features
+| ------ | ------------------- | ------------- 
+| **keeping NA values** | X1 | X2
+| **filling NA values** | X3 | X4
 
 ## Methodology (Ngan, Wendy)
 
@@ -91,7 +110,7 @@ Table X: Listing of Random Forest hyperparameters tuned
 | n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| 931|
 | max_depth | Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | 32|
 | max_features | The number of features to consider when looking for the best split. Lower value means that each tree can only consider a smaller proportion of total features. This adds randomness to the model and avoids some columns to take too much credit for the prediction. | log2(n_features)|
-| class_weight | Weights associated with classes in the form {class_label: weight}. By default, all classes have the same weight regardless of their count. The “balanced” mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y)). | 'balanced'|
+| class_weight | Weights associated with classes in the form {class_label: weight}. By default, all classes have the same weight regardless of their count. The ï¿½balancedï¿½ mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y)). | 'balanced'|
 
 - Results for XG_LR X_1, X_2:
 Random Forest was implemented on both X_1 and X_2 dataset. Refer to Data & Preprocessing Section for more details on different dataset. We observed that random forest's performance on X_1 slightly outperformed that on X_2 dataset with AUC-ROC score of 0.955 compared to 0.947. This is expected as X_1 has more features than X_2, resulting in higher predictive power. 
