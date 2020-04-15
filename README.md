@@ -154,7 +154,7 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 
 - Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
 
-<img align="right" src="matrix2.png" height="500"/>
+<img align="left" src="matrix2.png" height="750"/>
 
 - Discuss how Vesta could operationalize this, things to consider from Uma's findings (Uma)
 
