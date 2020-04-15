@@ -150,12 +150,13 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 
 - Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
 
-- Discuss how Vesta could operationalize this, things to consider from Uma's findings (Chitwan)
+- Discuss how Vesta could operationalize this, things to consider from Uma's findings (Uma)
 
 ### References
 1. https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html
 2. https://www.kaggle.com/c/ieee-fraud-detection/data
-
+3. https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841
+4. https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda
 
 
 
