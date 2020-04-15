@@ -42,7 +42,7 @@ Many of our features are derived from each other so our predictors are highly mu
 Although other non-Vxxx features are also multicolinear, we decide not to do drop them. The non-Vxxx features represent actual data that might be useful in distinguishing fraud vs not fraud. 
 
 Figure 1: C features correlation matrix
-[C corr plot](C_corrplot.png)
+![C corr plot](/C_corrplot.png)
 
 **Feature Engineering**
 
