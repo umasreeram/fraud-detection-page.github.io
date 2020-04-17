@@ -125,10 +125,12 @@ In our case, our response variable is categorical. Numeric and categorical varia
 
 ___CHI-SQUARED TEST___
 
-For categorical variables, we performed Chi squared test [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/). A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
+For categorical variables, we performed Chi squared test. [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/) 
+A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
 Chi-Square measures how expected count E and observed count O deviates each other.
 
 Figure 4. Chi-Squared Test formula
+
 <img src="chiformula.png" align="center" width="200"/>
 
 When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
@@ -299,4 +301,5 @@ Discuss how Vesta could operationalize this, things to consider from Uma's findi
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
 4. Kamil Belkhayat Abou Omar. "XGBoost and LGBM for Porto Seguros Kaggle challenge A comparison. " 2017. pdf.
 5. [https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html)
-
+6. [https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
+7. [https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/)
