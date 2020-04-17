@@ -283,12 +283,12 @@ Table X. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Parameters Used|   |   | colsample_bytree = 0.760__learning_rate = 0.164__max_depth = 481__min_child_weight = 1.018__min_data_in_leaf = 120__n_estimators = 607__num_leaves 615__reg_alpha = 3__reg_lambda = 878__subsample = 0.742__ |  |
-| Training AUC Score|    |0.965 |   |
-| Test AUC Score|    |0.9695 |   |
-| Training Time`|   |623s|   |
-| Prediction Time`|   |96s|   |
-| Parameter Tuning Time/ Iterations|   |70 minutes for 10 iterations|X minutes for X iterations |
+| Parameters Used|   |   | colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
+| Training AUC Score|   | |0.965 |   |
+| Test AUC Score|   | |0.9695 |   |
+| Training Time`|  | |623s|   |
+| Prediction Time`|  | |96s|   |
+| Parameter Tuning Time/ Iterations|  | |70 minutes for 10 iterations|X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
