@@ -292,7 +292,7 @@ Table X. Results of all models
              num_leaves 615__
              reg_alpha = 3__
              reg_lambda = 878__
-             subsample = 0.742__|
+             subsample = 0.742__ |
 | Training AUC Score|    |0.965 |   |
 | Test AUC Score|    |0.9695 |   |
 | Training Time`|   |623s|   |
