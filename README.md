@@ -272,6 +272,7 @@ Table X. Results of all models
 | Training Time`|   |   |   |
 | Prediction Time`|   |   |   |
 | Parameter Tuning Time/ Iterations|   |   |  X minutes for X iterations |
+
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
 An interesting observation is that different models are using different set of features for prediction. While random forest and LGBM have relatively similar important features, the logistic regression and XGBoost models have considerably different results. For instance, V238 is shown as one of the most important feature in XGBoost's model, while this feature is not at all emphasized in other models. This indicates a slim possibility for overfitting, however since we have little insights on how Vesta engineered these features, it is difficult to conclude. The random forest and LGBM models also use a high number of features for prediction, but each with relatively less importance.
