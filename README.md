@@ -4,7 +4,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 ## Data & Preprocessing
 
-The [dataset](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
+The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
 Table 1A: Unmasked Features
 
@@ -49,9 +49,9 @@ Figure 1: C features correlation matrix
 
 **Feature Engineering**
 
-Our dataset is at the transaction level and our models try to find patterns that distinguish fraudulent behavior from normal behavior. However, fraudulent behavior might differ for each user and one user's fradulent behavior may be another user's normal behavior. We want to identify a unique user id and see how rare or common a transaction is for that specific user. Adding features that represent user level statistics (i.e. mean, standard deviation) can help our model find those patterns. This method of feature engineering is common in LGBMs (Light Gradient Boosting Machine) and is discussed in detail by [Chris Deotte](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841). 
+Our dataset is at the transaction level and our models try to find patterns that distinguish fraudulent behavior from normal behavior. However, fraudulent behavior might differ for each user and one user's fradulent behavior may be another user's normal behavior. We want to identify a unique user id and see how rare or common a transaction is for that specific user. Adding features that represent user level statistics (i.e. mean, standard deviation) can help our model find those patterns. This method of feature engineering is common in LGBMs (Light Gradient Boosting Machine) and is discussed in detail by Chris Deotte [[2]](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841). 
 
-The dataset does not provide a unique user id, so we identify 3 possible combinations of features that could be unqiue to each user: [[card1], [card1 and addr1], [card1, addr1 and P_emaildomain]]. Then for each possible unique id, we add user level mean and standard deviation for TransactionAmt, D9, and D11. Our engineered features closely resemble the strategy detailed by [Konstantin Yakovlev](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda).
+The dataset does not provide a unique user id, so we identify 3 possible combinations of features that could be unqiue to each user: [[card1], [card1 and addr1], [card1, addr1 and P_emaildomain]]. Then for each possible unique id, we add user level mean and standard deviation for TransactionAmt, D9, and D11. Our engineered features closely resemble the strategy detailed by Konstantin Yakovlev [[3]](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda).
 
 After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
@@ -256,13 +256,10 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 
 ### Results & Discussion 
 
-
-
-Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
-
 Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9353), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
 Figure X ROC curve of all models
+
 <img src="ROC.png" width="500"/>
 
 Table X. Results of all models
@@ -280,11 +277,10 @@ Table X. Results of all models
 An interesting observation is that different models are using different set of features for prediction. While random forest and LGBM have relatively similar important features, the logistic regression and XGBoost models have considerably different results. For instance, V238 is shown as one of the most important feature in XGBoost's model, while this feature is not at all emphasized in other models. This indicates a slim possibility for overfitting, however since we have little insights on how Vesta engineered these features, it is difficult to conclude. The random forest and LGBM models also use a high number of features for prediction, but each with relatively less importance.
 
 Figure X Feature importance across models
-<img src="matrix_0_19.png" width="1000"/>
 
-<img src="matrix_20_39.png" width="1000"/>
-
-<img src="matrix_40_59.png" width="1000"/>
+<img src="matrix_0_19.png" width="1200"/>
+<img src="matrix_20_39.png" width="1200"/>
+<img src="matrix_40_59.png" width="1200"/>
 
 
 
@@ -292,42 +288,6 @@ Discuss how Vesta could operationalize this, things to consider from Uma's findi
 
 ### References
 https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html
-https://www.kaggle.com/c/ieee-fraud-detection/data
-https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841
-https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda
-
-
-
-# Template info below incase you guys need it (Will not be in final report)
-
-## Yo guys we will put our final results here!!!!
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](/hw_3_img.jpg)
-
-```
-![alt text](hw_3_img.jpg)
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/umasreeram/fraud-detection-page.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
+2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
+3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
