@@ -33,11 +33,11 @@ Table 2: Masked Features
 | M1-M9 | match, such as names on card and address, etc.
 | Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
 
-**Missing Data**
+### Missing Data
 
 All except 20 features have some missing values. We drop features where 90-100% of the values are missing. Since our dataset is so large and most of our features are masked, we decide to not pursue any complex data imputation techniques. For models that can't handle missing values such as logisitic regression, we fill NAs with 0. For models that can handle missing values such as XGBoost, we experiment with leaving missing values as is and filling missing values with -999. -999 is well outside the range of typical values and we believe that the model will be able to distinguish these values as missing and ignore them. 
 
-**Multicollinearity**
+### Multicollinearity
 
 Many of our features are derived from each other so our predictors are highly multicollinear. Because we want to extract feature importance from our models, we need to reduce multicollinearity. Since the Vxxx features are engineered features and not actual data, we drop one of every two highly correlated features (e.g. correlation > 0.75 or correlation < -0.75). We drop the feature with fewer number of unqiue values, the intuition being that the feature with greater number of unqiue values contains more "granular" data. 
 
@@ -47,7 +47,7 @@ Figure 1: C features correlation matrix
 
 <img src="C_corrplot.png" alt="CorrPlot" width="725"/>
 
-**Feature Engineering**
+### Feature Engineering
 
 Our dataset is at the transaction level and our models try to find patterns that distinguish fraudulent behavior from normal behavior. However, fraudulent behavior might differ for each user and one user's fradulent behavior may be another user's normal behavior. We want to identify a unique user id and see how rare or common a transaction is for that specific user. Adding features that represent user level statistics (i.e. mean, standard deviation) can help our model find those patterns. This method of feature engineering is common in LGBMs (Light Gradient Boosting Machine) and is discussed in detail by Chris Deotte [[2]](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841). 
 
@@ -55,12 +55,13 @@ The dataset does not provide a unique user id, so we identify 3 possible combina
 
 After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
+Table 3: Different Datasets
 |        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features
 | ------ | ------------------- | ------------- 
 | **keeping NA values** | X1 | X2
 | **filling NA values** | X3 | X4
 
-## Methodology (Ngan, Wendy)
+## Methodology
 
 ### Hyperparamter Tuning and Model Selection
 To perform the fraud detection task, we experimented two distinct classification approaches, including regression and tree-based. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
@@ -177,7 +178,7 @@ Logistic regression is a linear method, but the predictions are transformed usin
 
 Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
 
-Table X: Listing of Logistic Regression hyperparameters tuned
+Table 4: Listing of Logistic Regression hyperparameters tuned
 
 | Hyperparameters  | Impact on model | Tuned value |
 | ------------- | ------------- | ------------- |
@@ -198,14 +199,14 @@ The most basic tree based model is Decision Tree - a single tree algorithm which
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. Therefore, in random forest, only a random subset of the features is taken into consideration by the algorithm for splitting a node. This results in a wide diversity that generally results in a better model.
 
-In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table X.
+In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table 5.
 
 Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
  
 **LGBM**
 
-LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses**Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the**Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
+LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses **Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the **Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
 LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [4] and since then it has become a de-facto algorithm for multiple Kaggle competitions.
 
@@ -232,9 +233,9 @@ We set up an AWS EC2 instance with GPU to train the model. This allows us to tak
 
 It is particularly computationally expensive to tune the hyperparameters of the XGBoost estimator. Parameters that are fundamental to the structure of the model, such as learning rate, number and complexity of trees, are prioritized for tuning (Table X). Some parameters work cumulatively, an example will be "colsample_bytree", "colsample_bylevel" and "colsample_bynode". In these scenarios, it is more efficient to tune one parameter than to tune numerous combinations of three parameters.
 
-Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
+Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
 
-Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
+Table 5. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
 | Hyperparameters  | Impact on model | Importance |RF Params|LGBM Params|XGBoost Params|
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
@@ -288,7 +289,6 @@ Figure X Feature importance across models
 Discuss how Vesta could operationalize this, things to consider from Uma's findings (Uma)
 
 ### References
-https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
