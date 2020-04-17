@@ -150,9 +150,11 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 
 <img src="ROC.png" width="500"/>
 
-<img src="matrix.png" width="1000"/>
+<img src="matrix_1_20.png" width="1000"/>
 
-<img align="left" src="matrix2.png" height="750"/>
+<img src="matrix_21_40.png" width="1000"/>
+
+<img src="matrix_41_60.png" width="1000"/>
 
 Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
 
