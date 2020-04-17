@@ -232,9 +232,12 @@ XGBoost is a gradient boosted decision tree algorithm designed for speed and rob
 Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest and LGBM is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
-1. **Using a histogram-based algorthim** to compute each node's best split more efficiently. This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity from O(n_ data n_features) to O(n_data n_bins).
-2. **Passed in the parameter "scale_pos_weight".** This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
-3. **Train on cloud.** We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
+1. **Using a histogram-based algorthim**
+This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity from O(n_ data n_features) to O(n_data n_bins), hence allows each node to compute its best split more efficiently. 
+2. **Passed in the parameter "scale_pos_weight".**
+This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
+3. **Train on cloud.**
+We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
 It is particularly computationally expensive to tune the hyperparameters of the XGBoost estimator. Parameters that are fundamental to the structure of the model, such as learning rate, number and complexity of trees, are prioritized for tuning (Table X). Some parameters work cumulatively, an example will be "colsample_bytree", "colsample_bylevel" and "colsample_bynode". In these scenarios, it is more efficient to tune one parameter than to tune numerous combinations of three parameters.
 
@@ -251,7 +254,6 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 |subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
 |gamma| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|
 
-
 ### Results & Discussion 
 
 
@@ -262,6 +264,17 @@ Overall, the XGBoost model using feature set X_1 has the best AUC score performa
 
 Figure X ROC curve of all models
 <img src="ROC.png" width="500"/>
+
+Table X. Results of all models
+|  | Logistic Regression | Random Forest | LGBM | XGBoost |
+| ------------- | ------------- |------------- |------------- |
+| Parameters Used|   |   |   |
+| Training AUC Score|    |   |   |
+| Test AUC Score|    |   |   |
+| Training Time`|   |   |   |
+| Prediction Time`|   |   |   |
+| Parameter Tuning Time/ Iterations|   |   |  X minutes for X iterations |
+`Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
 An interesting observation is that different models are using different set of features for prediction. While random forest and LGBM have relatively similar important features, the logistic regression and XGBoost models have considerably different results. For instance, V238 is shown as one of the most important feature in XGBoost's model, while this feature is not at all emphasized in other models. This indicates a slim possibility for overfitting, however since we have little insights on how Vesta engineered these features, it is difficult to conclude. The random forest and LGBM models also use a high number of features for prediction, but each with relatively less importance.
 
