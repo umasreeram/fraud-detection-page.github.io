@@ -122,8 +122,11 @@ In our case, our response variable is categorical. Numeric and categorical varia
 
 ___CHI-SQUARED TEST___
 
-For categorical variables, we performed Chi squared test. A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. Chi-Square measures how expected count E and observed count O deviates each other.
+For categorical variables, we performed Chi squared test. A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
+Chi-Square measures how expected count E and observed count O deviates each other.
+
 <img src="chisq2.png" align="center" width="400"/>
+
 When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
 Hence, higher the Chi-Square value the feature is more dependent on the response and it can be selected for model training.
 
