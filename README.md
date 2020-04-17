@@ -75,7 +75,7 @@ Figure X. Nested Validation Methodology Diagram
 
 ### Parameter Optimization
 
-Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize the parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Therefore, this method is usually more efficient than other more commonly known methods, like GridSearch or random search.
+Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Therefore, this method is usually more efficient than other more commonly known methods, like GridSearch or random search.
 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
@@ -227,11 +227,18 @@ In conclusion, we proceeded with X_1 features due to its higher performance in A
 
 **XGBoost (Wendy)**
 
-XGBoost is a gradient boosted decision tree algorithm designed for speed and performance, that is known exceptional performance in binary classification problems with a severe class imbalance. Our XGBoost model implementation used a histogram-based algorithm to compute the best split.
+XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
-To accelerate our model training and hyperparameters tuning processes, we set up an AWS EC2 instance with GPU to train the XGBoost model on the cloud. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
+Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest and LGBM is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
-It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator.
+To accelerate our model training and evaluation process, we employed a few tactics:
+1. Using a histogram-based algorthim to compute each node's best split more efficiently. This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity from O(n_ data n_features) to O(n_data n_bins).
+2. Passed in the parameter "scale_pos_weight". This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
+3. Train on cloud. We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
+
+It is particularly computationally expensive to tune the hyperparameters of the XGBoost estimator. Parameters that are fundamental to the structure of the model, such as learning rate, number and complexity of trees, are prioritized for tuning (Table X). Some parameters work cumulatively, an example will be "colsample_bytree", "colsample_bylevel" and "colsample_bynode". In these scenarios, it is more efficient to tune one parameter than to tune numerous combinations of three parameters.
+
+Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a validation AUC score of 0.9747 and 0.9739 respectively, higher than other models. An interesting observation is that V238 is shown as one of the most important feature in XGBoost's model, while this feature as well as other important features in the model are not emphasized in other modeling methods. 
 
 Table X. Ranked listing of XGBoost hyperparameters tuned
 
@@ -244,7 +251,6 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 |subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
 |gamma| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|
 
-- Results for XGBoost X_1, X_2, XG_LR X_1, X_2
 
 ### Results & Discussion 
 
@@ -257,6 +263,7 @@ Table X. Ranked listing of XGBoost hyperparameters tuned
 <img src="matrix_40_59.png" width="1000"/>
 
 Discuss results of you experiments and which one we ended up selecting, final test AUC from Kaggle? (Wendy)
+Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models. The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9353), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
 Discuss how Vesta could operationalize this, things to consider from Uma's findings (Uma)
 
