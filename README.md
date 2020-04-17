@@ -297,7 +297,7 @@ Table X. Results of all models
 | Test AUC Score|    |0.9695 |   |
 | Training Time`|   |623s|   |
 | Prediction Time`|   |96s|   |
-| Parameter Tuning Time/ Iterations|   |70 minutes for 10 iterations|  X minutes for X iterations |
+| Parameter Tuning Time/ Iterations|   |70 minutes for 10 iterations|X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
