@@ -266,8 +266,9 @@ Figure X ROC curve of all models
 <img src="ROC.png" width="500"/>
 
 Table X. Results of all models
+
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
-| ------------- | ------------- |------------- |------------- |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
 | Parameters Used|   |   |   |
 | Training AUC Score|    |   |   |
 | Test AUC Score|    |   |   |
