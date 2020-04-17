@@ -253,7 +253,7 @@ Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a vali
 
 Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
-| Hyperparameters  | Impact on model | Importance |Random Forest Params|LGBM Params|XGBoost Params|
+| Hyperparameters  | Impact on model | Importance |RF Params|LGBM Params|XGBoost Params|
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|n_estimators|n_estimators|n_estimators|
 |Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High|-|learning_rate|learning_rate|
