@@ -222,14 +222,22 @@ In conclusion, we proceeded with X_1 features due to its higher performance in A
  
 **LGBM (Aditi)**
 
-- maybe mention sth about "Gradient-based One-Side Sampling (GOSS) to filter out the data instances for finding a split value"
-- Results for LGBM X_1, X_2, X_3, X_4
+LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses Gradient-based One-Side Sampling (GOSS) that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the Exclusive Feature Bundling (EFB), which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
+ 
+LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [4] and since then it has become a de-facto algorithm for multiple Kaggle competitions.
+ 
+For our current problem, we use the sklearn LGBMClassifier function. Since LGBM handles the categorical features, we have declared all our categorical objects as Category. LGBM handles missing values with relative ease unlike random forest. The algorithm has a wide range of parameters to choose from. We have performed hyperparameter tuning (Table X) on control parameters such as max_depth and min_data_in_leaf, core parameters such as objective, metric, num_leaves and boosting_type and learning rate while we have kept the baselines for the other parameters. 
+
+It is important to note that though XGBoost appears to be more computational robust, LGBM saves a lot of time computationally. The significantly less memory usage and high speed makes it a lucrative option. 
+
+Training the tuned LGBM model on both X_1 and X_2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are “D1”,”D15” and “D10”. 
+
 
 **XGBoost (Wendy)**
 
 XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
-Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest and LGBM is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
+Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
 1. **Using a histogram-based algorthim**
@@ -243,16 +251,28 @@ It is particularly computationally expensive to tune the hyperparameters of the 
 
 Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
 
-Table X. Ranked listing of XGBoost hyperparameters tuned
+Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
-| Hyperparameters  | Impact on model | Importance |
-| ------------- | ------------- |------------- |
-| n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| High|
-|learning_rate| Impacts the duration needed for the model to converge and performance of the model. | High|
-|max_depth| Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|
-|colsample_bytree| Number of features used by each tree. Lower value means that each tree can only consider a smaller proprtion of total columns. This avoids some columns to take too much credit for the prediction. | High|
-|subsample| % of training set to subsample to build each tree. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|
-|gamma| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|
+| ------------- | ------------- |------------- |Random Forest|LGBM|XGBoost|
+| ------------- | ------------- |------------- |Parameters|Parameters|Parameters|
+| Hyperparameters  | Impact on model | Importance |------------- | ------------- |------------- |
+| ------------- | ------------- |------------- | ------------- | ------------- |------------- |
+
+| Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|n_estimators|n_estimators|n_estimators|
+|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High|--------------|learning_rate|learning_rate|
+|Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|max_depth|max_depth|max_depth|
+|Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High|----------------|colsample_bytree|colsample_bytree|
+|Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|---------------|subsample|subsample|
+|Hessian Regularization| Prune by minimum sum of instance weight needed in a child. Regularization parameter.| Medium|----------------|min_child_weight|-------------------|
+|Minimum data per leaf| Prune by minimum number of observations required. | Medium|----------------|min_data_in_leaf|-------------------|
+|Maximum leaves| Maximum leaves for each trained tree. |Medium|----------------|num_leaves|-------------------|
+|L1 Regularization| L1 Regularization for Boosting. |Medium|----------------|reg_alpha|-------------------|
+|L2 Regularization| L2 Regularization for Boosting. |Medium|----------------|reg_lambda|-------------------|
+|Loss regularization| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|----------------|-------------------|gamma|
+Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |max_features|----------------|------------------|
+Class weight| Weights associated with classes in the form {class_label: weight}.|class_weight|--------------|-----------------|
+
+
 
 ### Results & Discussion 
 
@@ -292,3 +312,6 @@ https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/c
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
+4. Kamil Belkhayat Abou Omar. “XGBoost and LGBM for Porto Seguro’s Kaggle challenge: A comparison.“ 2017. pdf.
+
+
