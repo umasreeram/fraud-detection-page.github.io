@@ -253,23 +253,21 @@ Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a vali
 
 Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
-||||Random Forest|LGBM|XGBoost|
-||||Parameters|Parameters|Parameters|
-| Hyperparameters  | Impact on model | Importance ||||
+| Hyperparameters  | Impact on model | Importance |Random Forest Params|LGBM Params|XGBoost Params|
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|n_estimators|n_estimators|n_estimators|
-|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||learning_rate|learning_rate|
+|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High|-|learning_rate|learning_rate|
 |Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|max_depth|max_depth|max_depth|
-|Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High|----------------|colsample_bytree|colsample_bytree|
-|Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|---------------|subsample|subsample|
-|Hessian Regularization| Prune by minimum sum of instance weight needed in a child. Regularization parameter.| Medium|----------------|min_child_weight|-------------------|
-|Minimum data per leaf| Prune by minimum number of observations required. | Medium|----------------|min_data_in_leaf|-------------------|
-|Maximum leaves| Maximum leaves for each trained tree. |Medium|----------------|num_leaves|-------------------|
-|L1 Regularization| L1 Regularization for Boosting. |Medium|----------------|reg_alpha|-------------------|
-|L2 Regularization| L2 Regularization for Boosting. |Medium|----------------|reg_lambda|-------------------|
-|Loss regularization| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|----------------|-------------------|gamma|
-Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |max_features|----------------|------------------|
-Class weight| Weights associated with classes in the form {class_label: weight}.|class_weight|--------------|-----------------|
+|Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High|-|colsample_bytree|colsample_bytree|
+|Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|-|subsample|subsample|
+|Hessian Regularization| Prune by minimum sum of instance weight needed in a child. Regularization parameter.| Medium|-|min_child_weight|-|
+|Minimum data per leaf| Prune by minimum number of observations required. | Medium|-|min_data_in_leaf|-|
+|Maximum leaves| Maximum leaves for each trained tree. |Medium|-|num_leaves|-|
+|L1 Regularization| L1 Regularization for Boosting. |Medium|-|reg_alpha|-|
+|L2 Regularization| L2 Regularization for Boosting. |Medium|-|reg_lambda|-|
+|Loss regularization| Minimum reduction in the loss function required to make a split. Regularization parameter. Values can vary based on the loss function.| Medium|-|-|gamma|
+Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |max_features|-|-|
+Class weight| Weights associated with classes in the form {class_label: weight}.|class_weight|-|-|
 
 
 
