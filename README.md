@@ -221,7 +221,7 @@ Regarding to feature importance, both dataset showed relatively similar results.
 In conclusion, we proceeded with X_1 features due to its higher performance in AUC-ROC score. 
 
  
-**LGBM **
+**LGBM**
 
 LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses**Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the**Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
