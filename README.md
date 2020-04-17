@@ -139,6 +139,8 @@ Hence, higher the Chi-Square value the feature is more dependent on the response
 
 We chose variables until there is a sudden dip in the chi-squared scores.
 
+Figure 5. Chi-Square values for the features in descending order
+
 <img src="Chisqtest.png" align="center" width="400"/>
 
 
@@ -153,6 +155,9 @@ The fscore gives us an idea if there is a variance between the 2 groups of fraud
 
 We chose variables until there is a sudden dip in the F score.
 
+
+Figure 6. F values for the features in descending order
+
 <img src="Anova.png" align="center" width="400"/>
 
 
@@ -163,7 +168,7 @@ We then implemented the clustering using KMediods.
 The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
  
  
-Figure 5. Difference between K Means and K Medoids
+Figure 7. Difference between K Means and K Medoids
 
 <img src="k1k2.jpg" />
 
@@ -176,9 +181,9 @@ From the models described below, only Logistic Regression needs data that is bal
 
 Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
 
+Figure 8. Sigmoid curve
 
-
-<img src="sigmoid.png" align="center" width="300"/>
+<img src="sigmoid3.png" align="center" width="300"/>
 
 Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated can be written as:
 
