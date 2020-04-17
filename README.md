@@ -297,10 +297,36 @@ Figure X Feature importance across models
 <img src="matrix_0_19.png" width="1200"/>
 <img src="matrix_20_39.png" width="1200"/>
 <img src="matrix_40_59.png" width="1200"/>
+`
 
+### Monitoring the model’s performance over time
 
+**Trust in data changes**
+First step is to know if you can trust your data, only then you know that the changes shown are genuine. This can be gauged by:
 
-Discuss how Vesta could operationalize this, things to consider from Uma's findings (Uma)
+1. Checking the annotation of data → Check distribution of labels, how far is that from the ground truth
+2. Checking model dependencies → if it relies on features from a package, did that implementation change? (So, if there is a drop in accuracy maybe  its not the input data that's changed but the dependency component in the middle)
+
+Once we know the changes are genuine, we can set up systems to track them
+
+**Types of changes encountered in the data:**
+
+1. Nature of new data different from one its trained on - newer time period, or a newer economic policy or simply data of different nature(newer products or different features of older products, difference in data distributions  etc)
+2. Changes due to a positive feedback loop (e.g revenue estimates from a ML model- If the model results of the past was used to rectify business policies then the model results of the future not relevant anymore)
+
+**How to monitor changes?**
+
+1. Raise alarm if aggregation stats of the incoming data far exceed the the aggregation stats of the data trained (along with a desired threshold bound) →indicative of data distribution changes
+2. Change detection on  accuracy metrics - raise alarm if accuracy falls below a certain threshold 
+Track number of  false positives and number of  false negatives and raise alarm if either crosses a threshold ( which in turn decided by which is costlier) 
+3. The metrics monitored should also be reviewed by subject matter experts based on the business, industry acumen and market conditions.
+
+**What can be done to rectify?**
+
+1. Retraining- Sometimes unavoidable but not efficient and not always affordable
+2. Weighting data based on its age- new data given more preference
+3. Make the model learn the change - Boosting models
+
 
 ### References
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
