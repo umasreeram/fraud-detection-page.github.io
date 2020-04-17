@@ -266,8 +266,8 @@ Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGB
 |L1 Regularization| L1 Regularization for Boosting. |Medium|-|reg_alpha|-|
 |L2 Regularization| L2 Regularization for Boosting. |Medium|-|reg_lambda|-|
 |Loss regularization| Minimum reduction in the loss function required to make a split. Values can vary based on the loss function.| Medium|-|-|gamma|
-Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |max_features|-|-|
-Class weight| Weights associated with classes in the form {class_label: weight}.|class_weight|-|-|
+Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |Medium|max_features|-|-|
+Class weight| Weights associated with classes in the form {class_label: weight}.|Medium|class_weight|-|-|
 
 
 
