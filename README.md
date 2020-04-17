@@ -222,7 +222,7 @@ In conclusion, we proceeded with X_1 features due to its higher performance in A
  
 **LGBM (Aditi)**
 
-LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses **Gradient-based One-Side Sampling (GOSS)**,that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the **Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
+LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses**Gradient-based One-Side Sampling (GOSS)**,that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the**Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
 LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [4] and since then it has become a de-facto algorithm for multiple Kaggle competitions.
 
@@ -253,13 +253,12 @@ Training the tuned XGBoost model on both X_1 and X_2 dataset, we achieved a vali
 
 Table X. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
-| ------------- | ------------- |------------- |Random Forest|LGBM|XGBoost|
-| ------------- | ------------- |------------- |Parameters|Parameters|Parameters|
-| Hyperparameters  | Impact on model | Importance |------------- | ------------- |------------- |
+||||Random Forest|LGBM|XGBoost|
+||||Parameters|Parameters|Parameters|
+| Hyperparameters  | Impact on model | Importance ||||
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
-
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|n_estimators|n_estimators|n_estimators|
-|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High|--------------|learning_rate|learning_rate|
+|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||learning_rate|learning_rate|
 |Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|max_depth|max_depth|max_depth|
 |Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High|----------------|colsample_bytree|colsample_bytree|
 |Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|---------------|subsample|subsample|
