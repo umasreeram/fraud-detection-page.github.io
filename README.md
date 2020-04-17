@@ -6,7 +6,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
-Table 1A: Unmasked Features
+Table 1: Unmasked Features
 
 | Feature Name  | Description 
 | ------------- | ------------- 
@@ -21,7 +21,7 @@ Table 1A: Unmasked Features
 
 The meaning of the following features are masked but Vesta has provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
 
-Table 1B: Masked Features
+Table 2: Masked Features
 
 | Feature Category  | Description 
 | ------------------- | ------------- 
@@ -63,11 +63,11 @@ After addressing missing values, multicolinearity, and feature engineering we ha
 ## Methodology (Ngan, Wendy)
 
 ### Hyperparamter Tuning and Model Selection
-In this project, we evaluated different classification models to label fraudulent transactions. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [1](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation. Some preliminary analysis on the data showed that hold-out sample approach sufficiently captured the generality of the data (appendix??). 
+To perform the fraud detection task, we experimented two distinct classification approaches, including regression and tree-based. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
 
-Figure X shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
+Figure 2 shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
 
-Figure X. Nested Validation Methodology Diagram
+Figure 2. Nested Validation Methodology Diagram
 
 <img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
 
@@ -80,7 +80,7 @@ Given the number of features and complexity of some machine learning methods we 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
 
-## Experiments (Ngan,Uma,Aditi,Wendy)
+## Experiments
 
 ### Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
@@ -162,7 +162,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
 The dataset that was undersampled using clustering gave a much better ROC-AUC value. However, we could perform this test only on a portion of the dataset as we did not have enough computational resources to cluster the entire dataset of 590,940 and 1303 columns.
 From the models described below, only Logistic Regression needs data that is balanced. Other models account for the imbalance within themselves. 
 
-**Logistic Regression (Uma)**
+**Logistic Regression**
 
 Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
 
@@ -192,7 +192,7 @@ Table X: Listing of Logistic Regression hyperparameters tuned
 ### Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
-**Random Forest (Ngan)**
+**Random Forest**
 
 The most basic tree based model is Decision Tree - a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
 
@@ -200,22 +200,7 @@ Random forest is identical to bagging decision tree except it adds additional ra
 
 In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table X.
 
-Table X: Listing of Random Forest hyperparameters tuned
-
-| Hyperparameters  | Impact on model | Tuned value |
-| ------------- | ------------- | ------------- |
-| n_estimators | Number of decision trees in the model. Higher value increases complexity of the model, making the model more likely to overfit.| 931|
-| max_depth | Maximum depth of each decision tree. Higher value increases complexity of the model, making the model more likely to overfit. | 32|
-| max_features | The number of features to consider when looking for the best split. Lower value means that each tree can only consider a smaller proportion of total features. This adds randomness to the model and avoids some columns to take too much credit for the prediction. | log2(n_features)|
-| class_weight | Weights associated with classes in the form {class_label: weight}. By default, all classes have the same weight regardless of their count. The 'balanced' mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y)). | 'balanced'|
-
-- Results for XG_LR X_1, X_2:
-
-Random Forest was implemented on both X_1 and X_2 dataset. Refer to Data & Preprocessing Section for more details on different dataset. We observed that random forest's performance on X_1 slightly outperformed that on X_2 dataset with AUC-ROC score of 0.955 compared to 0.947. This is expected as X_1 has more features than X_2, resulting in higher predictive power. 
-
-Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
-
-In conclusion, we proceeded with X_1 features due to its higher performance in AUC-ROC score. 
+Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
  
 **LGBM**
@@ -231,7 +216,7 @@ It is important to note that though XGBoost appears to be more computational rob
 Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
 
-**XGBoost (Wendy)**
+**XGBoost**
 
 XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
@@ -281,12 +266,12 @@ Table X. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Parameters Used|   |   | colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
-| Training AUC Score|   | |0.965 |   |
+| Parameters Used|   | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
+| Training AUC Score|   | 0.9546| 0.965 |   |
 | Test AUC Score|   | |0.9695 |   |
-| Training Time`|  | |623s|   |
-| Prediction Time`|  | |96s|   |
-| Parameter Tuning Time/ Iterations|  | |70 minutes for 10 iterations|X minutes for X iterations |
+| Training Time`|  | 45m | 623s|   |
+| Prediction Time`|  | 10m |96s|   |
+| Parameter Tuning Time/ Iterations|  | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
@@ -308,5 +293,5 @@ https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/c
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
 4. Kamil Belkhayat Abou Omar. "XGBoost and LGBM for Porto Seguros Kaggle challenge A comparison. " 2017. pdf.
-
+5. [https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html)
 
