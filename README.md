@@ -220,7 +220,7 @@ Regarding to feature importance, both dataset showed relatively similar results.
 
 In conclusion, we proceeded with X_1 features due to its higher performance in AUC-ROC score. 
  
-**LGBM (Aditi)**
+**LGBM **
 
 LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses**Gradient-based One-Side Sampling (GOSS)**,that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the**Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
@@ -230,7 +230,7 @@ For our current problem, we use the sklearn LGBMClassifier function. Since LGBM 
 
 It is important to note that though XGBoost appears to be more computational robust, LGBM saves a lot of time computationally. The significantly less memory usage and high speed makes it a lucrative option. 
 
-Training the tuned LGBM model on both X_1 and X_2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
+Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
 
 **XGBoost (Wendy)**
@@ -283,12 +283,21 @@ Table X. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Parameters Used|   |   |   |
-| Training AUC Score|    |   |   |
-| Test AUC Score|    |   |   |
-| Training Time`|   |   |   |
-| Prediction Time`|   |   |   |
-| Parameter Tuning Time/ Iterations|   |   |  X minutes for X iterations |
+| Parameters Used|   |   | colsample_bytree = 0.760__
+             learning_rate = 0.164__
+             max_depth = 481__
+             min_child_weight = 1.018__
+             min_data_in_leaf = 120__
+             n_estimators = 607__
+             num_leaves 615__
+             reg_alpha = 3__
+             reg_lambda = 878__
+             subsample = 0.742__|
+| Training AUC Score|    |0.965 |   |
+| Test AUC Score|    |0.9695 |   |
+| Training Time`|   |623s|   |
+| Prediction Time`|   |96s|   |
+| Parameter Tuning Time/ Iterations|   |70 minutes for 10 iterations|  X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
