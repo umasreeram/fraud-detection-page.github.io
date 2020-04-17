@@ -309,6 +309,6 @@ https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/c
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
-4. Kamil Belkhayat Abou Omar. "XGBoost and LGBM for Porto Seguro’/s Kaggle challenge:/ A comparison. " 2017. pdf.
+4. Kamil Belkhayat Abou Omar. "XGBoost and LGBM for Porto Seguros Kaggle challenge A comparison. " 2017. pdf.
 
 
