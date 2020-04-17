@@ -75,7 +75,7 @@ Figure X. Nested Validation Methodology Diagram
 
 ### Parameter Optimization
 
-- Paramter Tuning using Bayes Search Optimization (Wendy)
+Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize the parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Therefore, this method is usually more efficient than other more commonly known methods, like GridSearch or random search.
 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
@@ -231,7 +231,7 @@ XGBoost is a gradient boosted decision tree algorithm designed for speed and per
 
 To accelerate our model training and hyperparameters tuning processes, we set up an AWS EC2 instance with GPU to train the XGBoost model on the cloud. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
-It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator. We have to priortize the parameters to be tuned (Table X) and outline a resonable search space. We also used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. Therefore, this method is likely to be more efficient than other more commonly known methods, like GridSearch or random serach.
+It is computationally and financially expensive to tune the hyperparameters of the XGBoost estimator.
 
 Table X. Ranked listing of XGBoost hyperparameters tuned
 
