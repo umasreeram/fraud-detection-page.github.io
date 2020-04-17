@@ -85,12 +85,112 @@ Fraud detection is a highly imbalanced classification problem in which amount of
 ### Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
 
+### Dealing with class imbalance
+
+<img src="unbalanced.png" align="center" width="300"/>
+
+Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud. Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
+
+Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
+
+There are 2 ways to handle this:
+
+1. Over sampling : Duplication or replication of examples from minority class
+2. Under sampling : Restrained choosing of examples from the majority class
+
+Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
+Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.
+
+Hence we decided to perform undersampling. There are different ways to perform undersampling:
+
+### Random undersampling:
+
+This involves randomly selecting examples from the majority class to delete from the training dataset. This has the effect of reducing the number of examples in the majority class in the transformed version of the training dataset. This process can be repeated until we have equal number of examples for each class. 
+
+We implemented this technique by randomly selecting data points in the non-Fraud class using the RandomUndersampler from imbalanced-learn class. The number of data points selected was equal to the number of data points in the fraud class feeding a balanced distribution to the classifier.
+
+
+### Clustered undersampling [K Medoids]
+This involves performing clustering on the majority class. Specifically, the number of clusters in the majority class is set to be equal to the number of data points in the minority class. The cluster centers are then used to represent the majority class. 
+
+Due to the high number of dimensions, direct clustering was proving to be computationally very intensive. Hence we first performed inferential feature selection. 
+
+#### Feature selection (Chi squared/ANOVA tests)
+Inferential feature selection aims to select variables which are highly dependent on the response variable.
+
+In our case, our response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
+
+___CHI-SQUARED TEST___
+
+For categorical variables, we performed Chi squared test. A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
+Chi-Square measures how expected count E and observed count O deviates each other.
+
+<img src="chisq2.png" align="center" width="400"/>
+
+When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
+Hence, higher the Chi-Square value the feature is more dependent on the response and it can be selected for model training.
+
+We chose variables until there is a sudden dip in the chi-squared scores.
+<img src="Chisqtest.png" align="center" width="400"/>
+
+
+___ANOVA TEST___
+
+Analysis of Variance is a statistical method, used to check the means of two or more groups that are significantly different from each other. It uses the F distribution to test the same.
+It assumes Hypothesis as
+H0: The 2 means are equal
+H1: At least one mean of the groups are different.
+
+The fscore gives us an idea if there is a variance between the 2 groups of fraud and non fraud explained by that particular numeric variable. A higher F-score indicates the variable is important.
+
+We chose variables until there is a sudden dip in the F score.
+
+<img src="Anova.png" align="center" width="400"/>
+
+
+We then implemented the clustering using KMediods.
+
+#### Clustering by K Medoids
+
+The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
+ 
+<img src="Mediod.png" align="center" width="400"/>
+
+
+**Result**
+The dataset that was undersampled using clustering gave a much better ROC-AUC value. However, we could perform this test only on a portion of the dataset as we did not have enough computational resources to cluster the entire dataset of 590,940 and 1303 columns.
+From the models described below, only Logistic Regression needs data that is balanced. Other models account for the imbalance within themselves. 
+
 **Logistic Regression (Uma)**
-- Feature selection (Chi squared/ANOVA tests)
-- Dealing with class imbalance
-	- random undersampling
-	- clustered undersampling
-- LR results w/ random undersampling on XG_LR X_1, X_2
+
+Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
+
+
+
+<img src="sigmoid.png" align="center" width="300"/>
+
+Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated as:
+
+p(X) = e^(b0 + b1X) / (1 + e^(b0 + b1X))
+
+which then can be written as:
+
+
+<img src="logodds.png" align="center" width="300"/>
+
+Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
+
+Table X: Listing of Logistic Regression hyperparameters tuned
+
+| Hyperparameters  | Impact on model | Tuned value |
+| ------------- | ------------- | ------------- |
+| C | Inverse of regularization strength; must be a positive float. Like in support vector machines, smaller values specify stronger regularization| 10|
+| max_iter | Maximum number of iterations taken for the solvers to converge | 17004|
+| penalty | Used to specify the norm used in the penalization. Performs shrinkage of coefficients | l2 |
+| solver | Algorithm to use in the optimization problem | 'saga'|
+
+
+
 
 ### Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
