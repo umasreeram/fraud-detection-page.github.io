@@ -90,6 +90,7 @@ We began our modeling with a simple logisitic regression model which would serve
 
 
 Figure 3. Distribution of response variable in our dataset
+
 <img src="unbalanced.png" align="center" width="300"/>
 
 Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud. Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
