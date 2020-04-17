@@ -88,6 +88,8 @@ We began our modeling with a simple logisitic regression model which would serve
 
 ### Dealing with class imbalance
 
+
+Figure 3. Distribution of response variable in our dataset
 <img src="unbalanced.png" align="center" width="300"/>
 
 Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud. Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
@@ -100,7 +102,7 @@ There are 2 ways to handle this:
 2. Under sampling : Restrained choosing of examples from the majority class
 
 Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
-Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.
+Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
 
 Hence we decided to perform undersampling. There are different ways to perform undersampling:
 
@@ -123,9 +125,10 @@ In our case, our response variable is categorical. Numeric and categorical varia
 
 ___CHI-SQUARED TEST___
 
-For categorical variables, we performed Chi squared test. A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
+For categorical variables, we performed Chi squared test [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/). A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
 Chi-Square measures how expected count E and observed count O deviates each other.
 
+Figure 4. Chi-Squared Test formula
 <img src="chiformula.png" align="center" width="200"/>
 
 When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
@@ -156,7 +159,9 @@ We then implemented the clustering using KMediods.
 
 The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
  
-<img src="kmeanskmedoids.png" align="center" width="400"/>
+ 
+Figure 5. Difference between K Means and K Medoids
+<img src="kmeanskmedoids.png" align="center" width="300"/>
 
 
 **Result**
