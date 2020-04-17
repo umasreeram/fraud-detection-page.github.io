@@ -163,7 +163,8 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
  
 Figure 5. Difference between K Means and K Medoids
-<img src="kmeanskmedoids.png" align="center" width="300"/>
+
+<img src="k1k2.jpg" />
 
 
 **Result**
