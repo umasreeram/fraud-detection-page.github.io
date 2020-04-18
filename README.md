@@ -1,8 +1,8 @@
-## Motivation
+# Motivation
 
 Fraud risk is everywhere. One major sector affected by fraud risk is the e-commerce industry. Online payment service companies are able to collect a vast amount of data on individuals and their transactions and use modeling to distinguish between fraudulent and non-fraudulent behaviors. In order to build our modeling skills and explore the field of fraud detection, we are applying machine learning to detect online payment frauds in a e-commerce transaction dataset from IEEE Computational Intelligence Society (IEEE-CIS) and payment service company, Vesta Corporation.
 
-## Data & Preprocessing
+# Data & Preprocessing
 
 The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
@@ -76,7 +76,7 @@ Figure 2. Nested Validation Methodology Diagram
 
 ### Parameter Optimization
 
-Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Comparing to more commonly known methods like Grid Search and Randomized Search, Bayesian optimization search achieves a lower run-time with relatively good performance.
+Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. These guesses are based on the algorithm's statistical estimations on probability, expected score improvement and lower confidence bound. Comparing to commonly known methods like Grid Search and Randomized Search, Bayesian optimization search achieves a lower run-time with relatively good performance.
 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
