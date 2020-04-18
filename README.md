@@ -56,12 +56,12 @@ The dataset does not provide a unique user id, so we identify 3 possible combina
 After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
 Table 3: Different Datasets
-|        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features
-| ------ | ------------------- | ------------- 
+|        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features|
+| -------------  | -------------  | ------------- |
 | **keeping NA values** | X1 | X2
 | **filling NA values** | X3 | X4
 
-## Methodology
+# Methodology
 
 ### Hyperparamter Tuning and Model Selection
 To perform the fraud detection task, we experimented two distinct classification approaches, including regression and tree-based. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
@@ -81,7 +81,7 @@ Given the number of features and complexity of some machine learning methods we 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
 
-## Experiments
+# Experiments
 
 ### Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
@@ -267,7 +267,7 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 
 
-### Results & Discussion 
+# Results & Discussion 
 
 Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
@@ -308,7 +308,7 @@ Figure X Feature importance across models
 <img src="matrix_40_59.png" width="1300"/>
 
 
-### Post-production Monitoring 
+# Post-production Monitoring 
 
 **Monitoring the model’s performance over time**
 First step is to know if you can trust your data, only then you know that the changes shown are genuine. This can be gauged by:
@@ -337,7 +337,7 @@ Track number of false positives and number of false negatives and raise alarm if
 3. Make the model learn the change - Boosting models
 
 
-### References
+# References
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
