@@ -87,32 +87,31 @@ We began our modeling with a simple logisitic regression model which would serve
 
 ### Dealing with class imbalance
 
-Figure 3. Distribution of response variable in our dataset
-
-<img src="unbalanced.png" align="center" width="300"/>
-
-Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud. Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
+Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud (Figure 3). Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
 
 Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
 
+Figure 3. Distribution of response variable in our dataset
+<img src="unbalanced.png" align="center" width="300"/>
+
 There are 2 ways to handle this:
 
-1. Oversampling : Duplication or replication of examples from minority class
-2. Undersampling : Restrained choosing of examples from the majority class
+1. **Oversampling** : Duplication or replication of examples from minority class
+2. **Undersampling** : Restrained choosing of examples from the majority class
 
 Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
 Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
 
 Hence we decided to perform undersampling. There are different ways to perform undersampling:
 
-### Random undersampling:
+### Random undersampling
 
 This involves randomly selecting examples from the majority class to delete from the training dataset. This has the effect of reducing the number of examples in the majority class in the transformed version of the training dataset. This process can be repeated until we have equal number of examples for each class. 
 
 We implemented this technique by randomly selecting data points in the non-Fraud class using the RandomUndersampler from imbalanced-learn class. The number of data points selected was equal to the number of data points in the fraud class feeding a balanced distribution to the classifier.
 
 
-### Clustered undersampling [K Medoids]
+### Clustered undersampling: K Medoids
 This involves performing clustering on the majority class. Specifically, the number of clusters in the majority class is set to be equal to the number of data points in the minority class. The cluster centers are then used to represent the majority class. 
 
 Due to the high number of dimensions, direct clustering was proving to be computationally very intensive. Hence we first performed inferential feature selection. 
@@ -122,7 +121,7 @@ Inferential feature selection aims to select variables which are highly dependen
 
 In our case, our response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
 
-##### Chi-squared Test:
+**Chi-squared Test**
 
 For categorical variables, we performed Chi squared test. [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/) 
 A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
@@ -142,22 +141,18 @@ Figure 5. Chi-Square values for the features in descending order
 <img src="Chisqtest.png" align="center" width="400"/>
 
 
-##### ANOVA Test
+**ANOVA Test**
 
 Analysis of Variance is a statistical method, used to check the means of two or more groups that are significantly different from each other. It uses the F distribution to test the same.
 It assumes Hypothesis as
 H0: The 2 means are equal
 H1: At least one mean of the groups are different.
 
-The fscore gives us an idea if there is a variance between the 2 groups of fraud and non fraud explained by that particular numeric variable. A higher F-score indicates the variable is important.
-
-We chose variables until there is a sudden dip in the F score.
-
+The f-score gives us an idea if there is a variance between the 2 groups of fraud and non fraud explained by that particular numeric variable. A higher F-score indicates the variable is important. Variables are selected until there is a sudden dip in the F score.
 
 Figure 6. F values for the features in descending order
 
 <img src="Anova.png" align="center" width="400"/>
-
 
 We then implemented the clustering using KMediods.
 
@@ -267,13 +262,13 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 # Results & Discussion 
 
-Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
+Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models(Figure 9). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
-Figure X ROC curve of all models
+Figure 9 ROC curve of all models
 
 <img src="ROC.png" width="500"/>
 
-Table X. Results of all models
+Table 6. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -286,9 +281,7 @@ Table X. Results of all models
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 *On CPU-only machine for better comparison, model training, prediction and parameter tuning is done on cloud instance with GPU
 
-Figure X shows the top 60 features that are found to be most important across models. 
-
-Different models are using different set of features for prediction (Figure X). Some interesting insights include:
+Figure 10 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
 
 **1. XGBoost uses a smaller subset of features as compared to other models.**
 
@@ -300,7 +293,7 @@ Key advantages to models that use a smaller set of features include high interpr
 
 Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
-Figure X Feature importance across models
+Figure 10. Feature importance across models
 <img src="matrix_0_19.png" width="1300"/>
 <img src="matrix_20_39.png" width="1300"/>
 <img src="matrix_40_59.png" width="1300"/>
