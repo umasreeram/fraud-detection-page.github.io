@@ -265,7 +265,7 @@ Overall, the XGBoost model using feature set X1 has the best AUC score performan
 
 Figure 11. ROC curve of all models
 
-<img src="ROC.png" width="600"/>
+<img src="ROC.png" width="800"/>
 
 
 Table 5. Results of all models
