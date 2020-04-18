@@ -253,19 +253,19 @@ Table 5. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGB
 
 | Hyperparameters  | Impact on model | Importance |RF Params|LGBM Params|XGBoost Params|
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
-| Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|n_estimators|n_estimators|n_estimators|
-|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High|-|learning_rate|learning_rate|
-|Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|max_depth|max_depth|max_depth|
-|Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High|-|colsample_bytree|colsample_bytree|
-|Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium|-|subsample|subsample|
-|Hessian Regularization| Prune by minimum sum of instance weight needed in a child. | Medium|-|min_child_weight|-|
-|Minimum data per leaf| Prune by minimum number of observations required. | Medium|-|min_data_in_leaf|-|
-|Maximum leaves| Maximum leaves for each trained tree. |Medium|-|num_leaves|-|
-|L1 Regularization| L1 Regularization for Boosting. |Medium|-|reg_alpha|-|
-|L2 Regularization| L2 Regularization for Boosting. |Medium|-|reg_lambda|-|
-|Loss regularization| Minimum reduction in the loss function required to make a split. Values can vary based on the loss function.| Medium|-|-|gamma|
-Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |Medium|max_features|-|-|
-Class weight| Weights associated with classes in the form {class_label: weight}.|Medium|class_weight|-|-|
+| Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|X|X|X|
+|Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||X|X|
+|Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|X|X|X|
+|Column sampling by tree| % of columns used per iteration. Lower value means that each tree can only consider a smaller proportion of total columns. This avoids some columns to take too much credit for the prediction. | High||X|X|
+|Row sampling| % of rows used per iteration. Higher value prevents overfitting, but potentially in sacrifice of performance. | Medium||X|X|
+|Hessian Regularization| Prune by minimum sum of instance weight needed in a child. | Medium||X||
+|Minimum data per leaf| Prune by minimum number of observations required. | Medium||X||
+|Maximum leaves| Maximum leaves for each trained tree. |Medium||X||
+|L1 Regularization| L1 Regularization for Boosting. |Medium||X||
+|L2 Regularization| L2 Regularization for Boosting. |Medium||X||
+|Loss regularization| Minimum reduction in the loss function required to make a split. Values can vary based on the loss function.| Medium|||X|
+Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |Medium|X|||
+Class weight| Weights associated with classes in the form {class_label: weight}.|Medium|X|-|-|
 
 
 
@@ -283,7 +283,7 @@ Table X. Results of all models
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Parameters Used|   | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
 | Training AUC Score|   | 0.9546| 0.965 |   |
-| Test AUC Score|   | |0.9695 |   |
+| Validation AUC Score|   | |0.9695 |   |
 | Training Time`|  | 45m | 623s|   |
 | Prediction Time`|  | 10m |96s|   |
 | Parameter Tuning Time/ Iterations|  | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
