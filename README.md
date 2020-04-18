@@ -43,7 +43,7 @@ Many of our features are derived from each other so our predictors are highly mu
 
 Although non-Vxxx features (features that are not the Vxxx features) are also multicolinear, we are slightly hesitant to drop them. The non-Vxxx features represent actual data that might be useful in distinguishing between fraud and not fraud. We experiment with two versions of the data, one with all non-Vxxx columns included and another with multicollinear non-Vxxx columns dropped.
 
-Figure 1: C features correlation matrix
+_Figure 1: C features correlation matrix_
 
 <img src="C_corrplot.png" alt="CorrPlot" width="725"/>
 
@@ -69,7 +69,7 @@ To perform the fraud detection task, we experimented two distinct classification
 
 Figure 2 shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
 
-Figure 2. Nested Validation Methodology Diagram
+_Figure 2. Nested Validation Methodology Diagram_
 
 <img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
 
@@ -92,7 +92,8 @@ Before fitting any model, we wanted to ensure we are feeding the model a balance
 Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
 
 _Figure 3. Distribution of response variable in our dataset_
-<img src="unbalanced.png" align="center" width="300"/>
+
+<img src="unbalanced.png" align="center" width="500"/>
 
 There are 2 ways to handle this:
 
@@ -163,7 +164,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 _Figure 7. Difference between k-means and k-medoids_
 
-<img src="k1k2.jpg" />
+<img src="kmeanskmedoids_2.png" />
 
 
 ### Result
@@ -188,7 +189,7 @@ Thus the odds can be expressed as a linear combination of the predictor variable
 ## Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
-### Random Forest
+### 2.1 Random Forest
 
 The most basic tree based model is Decision Tree - a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
 
@@ -199,7 +200,7 @@ In this project, we implemented random forest using the sklearn library "RandomF
 Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
  
-### LGBM
+### 2.2 LGBM
 
 LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses **Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the **Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
@@ -212,18 +213,18 @@ It is important to note that though XGBoost appears to be more computational rob
 Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
 
-### XGBoost
+### 2.3 XGBoost
 
 XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
 Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
-1. **Using a histogram based algorthim for splitting**
+- **Using a histogram based algorthim for splitting**
 This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity of computing each best split from from O(#data * #features) to O(#data * #bins).
-2. **Passed in the parameter "scale_pos_weight".**
+- **Passed in the parameter "scale_pos_weight".**
 This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
-3. **Train on cloud.**
+- **Train on cloud.**
 We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
 Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
@@ -271,13 +272,13 @@ _Table 5. Results of all models_
 
 Figure 10 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
 
-**1. XGBoost uses a smaller subset of features as compared to other models.**
+- **XGBoost uses a smaller subset of features as compared to other models.**
 
 Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model.
 
 Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
 
-**2. User-level features are found to be helpful in 2 out of 4 models.**
+- **User-level features are found to be helpful in 2 out of 4 models.**
 
 Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
