@@ -197,7 +197,7 @@ Logistic regression is a linear method, but the predictions are transformed usin
 Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
 
 ## Approach 2: Tree Based Methods
-Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
+Compared to logistic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logistic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
 ### 2.1 Random Forest
 
@@ -205,7 +205,7 @@ The most basic tree based model is Decision Tree- a single tree algorithm which 
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. Therefore, in random forest, only a random subset of the features is taken into consideration by the algorithm for splitting a node. This results in a wide diversity that generally results in a better model.
 
-In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table 5.
+In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table 4.
 
 Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
