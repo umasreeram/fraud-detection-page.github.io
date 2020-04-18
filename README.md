@@ -198,7 +198,7 @@ Logistic regression is a linear method, but the predictions are transformed usin
 Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
 
 ## Approach 2: Tree Based Methods
-Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
+Compared to logistic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logistic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
 ### 2.1 Random Forest
 
