@@ -135,6 +135,7 @@ A Chi-Squared test is used in statistics to test the independence of two events.
 Chi-Square measures how expected count E and observed count O deviates each other.
 
 Figure 4. Chi-Squared Test formula
+
 <img src="chiformula.png" align="center" width="200"/>
 
 
@@ -171,7 +172,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 Figure 7. Difference between K-means and K-medoids
 
-<img src="kmeanskmedoids_2.png" width="600"/>
+<img src="kmeanskmedoids_2.png" width="800"/>
 
 
 ### Result
@@ -222,7 +223,7 @@ XGBoost is a gradient boosted decision tree algorithm designed for speed and rob
 Similar to other methods discussed above, XGBoost is a collection of decision trees, build sequentially to minimize the specified objective function using gradient descent. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
-- **Using a histogram based algorthim for splitting**
+- **Using a histogram based algorthim for splitting.**
 This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity of computing each best split from from O(#data * #features) to O(#data * #bins).
 - **Passed in the parameter "scale_pos_weight".**
 This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
@@ -234,7 +235,7 @@ Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a valida
 Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
 | Hyperparameters  | Impact on model | Importance |Tuned in RF|Tuned in LGBM|Tuned in XGBoost|
-| ------------- | ------------- |------------- | :-------------: | :-------------:|:-------------: |
+| ------------- | ------------- |:-------------: | :-------------: | :-------------:|:-------------: |
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|X|X|X|
 |Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||X|X|
 |Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|X|X|X|
