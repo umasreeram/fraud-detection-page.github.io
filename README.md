@@ -187,7 +187,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 Figure 8. Difference between K-means and K-medoids
 
-<img src="kmeanskmedoids_2.png" width="500"/>
+<img src="kmeanskmedoids_2.png" width="700"/>
 
 
 ### Result
@@ -201,7 +201,7 @@ Compared to logistic regression, tree based methods are less susceptible to outl
 
 Figure 9. Bagging vs Boosting methods
 
-<img src="bagging_boosting.png" width="500"/>
+<img src="bagging_boosting.png" width="700"/>
 
 ### 2.1 Random Forest
 
@@ -213,7 +213,7 @@ We implemented random forest using RandomForestClassifier in the sklearn module,
 
 Figure 10. Tree building methods of LGBM and XGBoost
 
-<img src="boosting_methods.png" width="500"/>
+<img src="boosting_methods.png" width="700"/>
  
 ### 2.2 LGBM
 
