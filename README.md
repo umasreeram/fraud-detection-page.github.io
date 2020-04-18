@@ -76,7 +76,7 @@ Figure 2. Nested Validation Methodology Diagram
 
 ### Parameter Optimization
 
-Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Therefore, this method is usually more efficient than other more commonly known methods, like GridSearch or random search.
+Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance via statistical estimations on probability, expected score improvement and lower confidence bound. Comparing to more commonly known methods like Grid Search and Randomized Search, Bayesian optimization search achieves a lower run-time with relatively good performance.
 
 ### Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
@@ -238,8 +238,8 @@ XGBoost is a gradient boosted decision tree algorithm designed for speed and rob
 Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
-1. **Using a histogram-based algorthim**
-This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity from O(n_ data n_features) to O(n_data n_bins), hence allows each node to compute its best split more efficiently. 
+1. **Using a histogram based algorthim for splitting**
+This method group features into a set of bins and perform splitting on the bins instead of individual features. This reduces the computational complexity of computing each best split from from O(#data * #features) to O(#data * #bins).
 2. **Passed in the parameter "scale_pos_weight".**
 This is a ratio between positive samples and negative samples calculated from the dataset that helps convergence.
 3. **Train on cloud.**
@@ -251,7 +251,7 @@ Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a valida
 
 Table 5. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
-| Hyperparameters  | Impact on model | Importance |RF Params|LGBM Params|XGBoost Params|
+| Hyperparameters  | Impact on model | Importance |Tuned in RF|Tuned in LGBM|Tuned in XGBoost|
 | ------------- | ------------- |------------- | ------------- | ------------- |------------- |
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|X|X|X|
 |Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||X|X|
@@ -282,36 +282,46 @@ Table X. Results of all models
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Parameters Used| C=10, max_iter=17004, penalty='l2', solver='saga  | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
-| Training AUC Score|  0.8708 | 0.9546| 0.965 |   |
-| Validation AUC Score| 0.8651  | |0.9695 |   |
+| Training AUC Score|  0.8708 | | 0.965 |   |
+| Validation AUC Score| 0.8651  | 0.9546 |0.9695 |   |
 | Training Time`| 60m | 45m | 623s|   |
 | Prediction Time`| 2m | 10m |96s|   |
 | Parameter Tuning Time/ Iterations| 300minutes | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
-An interesting observation is that different models are using different set of features for prediction. While random forest and LGBM have relatively similar important features, the logistic regression and XGBoost models have considerably different results. For instance, V238 is shown as one of the most important feature in XGBoost's model, while this feature is not at all emphasized in other models. This indicates a slim possibility for overfitting, however since we have little insights on how Vesta engineered these features, it is difficult to conclude. The random forest and LGBM models also use a high number of features for prediction, but each with relatively less importance.
+Figure X shows the top 60 features that are found to be most important across models. 
+
+Different models are using different set of features for prediction (Figure X). Some interesting insights include:
+
+1. XGBoost uses a smaller subset of features as compared to other models.
+Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model. 
+
+Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
+
+2. User-level features are found to be helpful in 2 out of 4 models.
+
+Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
 Figure X Feature importance across models
+<img src="matrix_0_19.png" width="1300"/>
+<img src="matrix_20_39.png" width="1300"/>
+<img src="matrix_40_59.png" width="1300"/>
 
-<img src="matrix_0_19.png" width="1200"/>
-<img src="matrix_20_39.png" width="1200"/>
-<img src="matrix_40_59.png" width="1200"/>
-`
 
-### Monitoring the model’s performance over time
+### Post-production Monitoring 
 
-**Trust in data changes**
+**Monitoring the model’s performance over time**
 First step is to know if you can trust your data, only then you know that the changes shown are genuine. This can be gauged by:
 
 1. Checking the annotation of data → Check distribution of labels, how far is that from the ground truth
-2. Checking model dependencies → if it relies on features from a package, did that implementation change? (So, if there is a drop in accuracy maybe  its not the input data that's changed but the dependency component in the middle)
+2. Checking model dependencies → if it relies on features from a package, did that implementation change? (So, if there is a drop in accuracy maybe it is not the input data that changed but the dependency component in the middle)
 
-Once we know the changes are genuine, we can set up systems to track them
+Once we know the changes are genuine, we can set up systems to track them.
 
 **Types of changes encountered in the data:**
 
-1. Nature of new data different from one its trained on - newer time period, or a newer economic policy or simply data of different nature(newer products or different features of older products, difference in data distributions  etc)
+1. Nature of new data different from one its trained on - newer time period, or a newer economic policy or simply data of different nature(newer products or different features of older products, difference in data distributions, etc.)
 2. Changes due to a positive feedback loop (e.g revenue estimates from a ML model- If the model results of the past was used to rectify business policies then the model results of the future not relevant anymore)
 
 **How to monitor changes?**
