@@ -197,7 +197,11 @@ Using logistic regression, balanced dataset outperforms imbalanced one. Addition
 We implemented logistic regression using LogisticRegressionClassifier in the sklearn module, on both X3 and X4 dataset. We observed that the logistic regression performed on X3 slightly better than on X4 dataset with AUC-ROC score of 0.8651 and 0.8588 respectively. This is expected as X3 has more features than X4, resulting in higher predictive power. Regarding to feature importance, both dataset show relatively similar results. 
 
 ## Approach 2: Tree Based Methods
-Compared to logistic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logistic regression, we try tree based methods such as Random Forest, LGBM and XGBoost. 
+Compared to logistic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logistic regression, we try tree based bagging and boosting methods including Random Forest, LGBM and XGBoost. 
+
+Figure 9. Bagging vs Boosting methods
+
+<img src="bagging_boosting.png" width="800"/>
 
 ### 2.1 Random Forest
 
@@ -205,8 +209,11 @@ The most basic tree based model is Decision Tree - a single tree algorithm which
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. This results in a wide diversity that generally results in a better model.
 
-We implemented random forest using RandomForestClassifier in the sklearn module, on both X3 and X4 dataset. We observed that random forest performed on X3 slightly better than on X4 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This is expected as X3 has more features than X4, resulting in higher predictive power. Regarding to feature importance, both dataset show relatively similar results. Although the relative order of frature importance changes sligtly, the same features showe high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. See Figure 10.
+We implemented random forest using RandomForestClassifier in the sklearn module, on both X3 and X4 dataset. We observed that random forest performed on X3 slightly better than on X4 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This is expected as X3 has more features than X4, resulting in higher predictive power. Regarding to feature importance, both dataset show relatively similar results. Although the relative order of frature importance changes sligtly, the same features showe high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. See Figure 12.
 
+Figure 10. Tree building methods of LGBM and XGBoost
+
+<img src="boosting_methods.png" width="800"/>
  
 ### 2.2 LGBM
 
@@ -254,9 +261,9 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 # Results & Discussion 
 
-Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models (Figure 9). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition was still opened.
+Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models (Figure 11). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition was still opened.
 
-Figure 9. ROC curve of all models
+Figure 11. ROC curve of all models
 
 <img src="ROC.png" width="800"/>
 
@@ -276,7 +283,7 @@ Table 5. Results of all models
 *On CPU-only machine for better comparison, model training, prediction and parameter tuning is done on cloud instance with GPU
 
 
-Figure 10 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
+Figure 12 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
 
 **1. XGBoost uses a smaller subset of features as compared to other models.**
 
