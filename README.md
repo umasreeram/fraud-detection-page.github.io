@@ -205,9 +205,7 @@ The most basic tree based model is Decision Tree- a single tree algorithm which 
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. Therefore, in random forest, only a random subset of the features is taken into consideration by the algorithm for splitting a node. This results in a wide diversity that generally results in a better model.
 
-In this project, we implemented random forest using the sklearn library "RandomForestClassifier" function. Although there are many hyperparameters that can be tuned in random forest, for the interest of time, we only focused on the main ones what can affect model performance significantly. See Table 4.
-
-Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
+We implemented random forest using RandomForestClassifier in the sklearn library, on both X1 and X2 dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
  
 ### 2.2 LGBM
@@ -216,11 +214,7 @@ LightGBM is a gradient boosting framework that uses tree-based learning by growi
 
 LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [4] and since then it has become a de-facto algorithm for multiple Kaggle competitions.
 
-For our current problem, we use the sklearn LGBMClassifier function. Since LGBM handles the categorical features, we have declared all our categorical objects as Category. LGBM handles missing values with relative ease unlike random forest. The algorithm has a wide range of parameters to choose from. We have performed hyperparameter tuning (Table X) on control parameters such as max_depth and min_data_in_leaf, core parameters such as objective, metric, num_leaves and boosting_type and learning rate while we have kept the baselines for the other parameters.
-
-It is important to note that though XGBoost appears to be more computational robust, LGBM saves a lot of time computationally. The significantly less memory usage and high speed makes it a lucrative option.
-
-Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
+We used the sklearn LGBMClassifier function to implement the model. Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
 
 ### 2.3 XGBoost
@@ -237,7 +231,7 @@ This is a ratio between positive samples and negative samples calculated from th
 - **Train on cloud.**
 We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
-Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
+Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. Unlike other models, XGBoost uses "V258" as a dominant feature for predictions. As "V258" is a feature engineered by Vesta, we unfortunately cannot make any further inferences.
 
 Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
@@ -256,7 +250,6 @@ Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGB
 |Loss regularization| Minimum reduction in the loss function required to make a split. Values can vary based on the loss function.| Medium|||X|
 Maximum features|Number of features when looking for the best split. Lower value adds for randomness and avoids columns to take too much credit for prediction. |Medium|X|||
 Class weight| Weights associated with classes in the form {class_label: weight}.|Medium|X|||
-
 
 
 # Results & Discussion 
@@ -304,11 +297,13 @@ Figure 10. Feature importance across models
 # Model Deployment and Post-production Monitoring 
 
 **Determining most suitable threshold**
+
 To deploy the fraud detection model, Vesta has to determine the respective business cost of a false positive (FP) and false negative (FN) prediction. The FP cost is the immediate and long-term loss of potential revenue, results from Vesta rejecting a transaction of a honest user. The FN cost is the chargeback cost or other penalty that Vesta is responsible for approving a fraudulent transaction. Proceeding forward, Vesta can consider two methods of determining a suitable threshold:
 1. Apply a suitable threshold on all transactions, reject all transactions above those threshold → Based on the calculated ratio between FP and FN cost, Vesta can find the optimal threshold the minimizes total cost. Any transactions with a probability higher than that threshold can be rejected.
 2. Set up different thresholds for transactions with different dolllar amounts → Depends on the pricing structure between Vesta and its vendors, the financial cost of FP and FN predictions might not be consistent across transaction amounts. For instance, fradulent transactions above a certain amount may not be covered by insurance. Vesta can categorized transactions into different bins according to the transaction amount, hence implement different thresholds for each bin. In the earlier example, big transactions might be rejected at a lower threshold (lower predicted probability to be fradulent), as Vesta is exposed to more risk.
 
-**Identify genuine changes in data**
+**Identify when the data/ pattern changes**
+
 After deploying the fruad detection model, it is important to regularly evaluate model performance to ensure that the model is still relevant and accurate. Continuous model evaluation also drives key managerial decision such as whether or not the model has to be retrained.The first step is to know whether the data can be trusted and whether the observed changes are genuine. This can be gauged by:
 
 - Checking annotations of data → Check distribution of labels, how far is that from the distribution of the training set/ ground truth
