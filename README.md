@@ -271,7 +271,7 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 ### Results & Discussion 
 
-Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9353), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
+Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
 Figure X ROC curve of all models
 
@@ -294,12 +294,12 @@ Figure X shows the top 60 features that are found to be most important across mo
 
 Different models are using different set of features for prediction (Figure X). Some interesting insights include:
 
-- **XGBoost uses a smaller subset of features as compared to other models.**
+**1. XGBoost uses a smaller subset of features as compared to other models.**
 Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model.
 
 Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
 
-- **User-level features are found to be helpful in 2 out of 4 models.**
+**2. User-level features are found to be helpful in 2 out of 4 models.**
 Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
 Figure X Feature importance across models
@@ -325,9 +325,9 @@ Once we know the changes are genuine, we can set up systems to track them.
 
 **How to monitor changes?**
 
-1. Raise alarm if aggregation stats of the incoming data far exceed the the aggregation stats of the data trained (along with a desired threshold bound) →indicative of data distribution changes
-2. Change detection on  accuracy metrics - raise alarm if accuracy falls below a certain threshold 
-Track number of  false positives and number of  false negatives and raise alarm if either crosses a threshold ( which in turn decided by which is costlier) 
+1. Raise alarm if aggregation stats of the incoming data far exceed the the aggregation stats of the data trained (along with a desired threshold bound) indicative of data distribution changes
+2. Change detection on accuracy metrics- raise alarm if accuracy falls below a certain threshold 
+Track number of false positives and number of false negatives and raise alarm if either crosses a threshold ( which in turn decided by which is costlier) 
 3. The metrics monitored should also be reviewed by subject matter experts based on the business, industry acumen and market conditions.
 
 **What can be done to rectify?**
