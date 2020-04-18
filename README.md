@@ -187,7 +187,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 Figure 8. Difference between K-means and K-medoids
 
-<img src="kmeanskmedoids_2.png" width="800"/>
+<img src="kmeanskmedoids_2.png" width="600"/>
 
 
 ### Result
@@ -201,7 +201,7 @@ Compared to logistic regression, tree based methods are less susceptible to outl
 
 Figure 9. Bagging vs Boosting methods
 
-<img src="bagging_boosting.png" width="800"/>
+<img src="bagging_boosting.png" width="600"/>
 
 ### 2.1 Random Forest
 
@@ -213,7 +213,7 @@ We implemented random forest using RandomForestClassifier in the sklearn module,
 
 Figure 10. Tree building methods of LGBM and XGBoost
 
-<img src="boosting_methods.png" width="800"/>
+<img src="boosting_methods.png" width="600"/>
  
 ### 2.2 LGBM
 
@@ -293,7 +293,7 @@ Models that use a smaller set of features have some key advantages, including hi
 
 **2. User-level features are found to be helpful in 2 out of 4 models.**
 
-Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
+Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_Pf_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
 Figure 10. Feature importance across models
 <img src="matrix_0_19.png" width="1300"/>
