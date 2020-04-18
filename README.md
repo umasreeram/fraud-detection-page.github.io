@@ -209,7 +209,7 @@ We implemented random forest using RandomForestClassifier in the sklearn module,
 
 LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally, leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses **Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the **Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
-LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [4] and since then it has become a de-facto algorithm for multiple Kaggle competitions.
+LGBM can handle large size of data and takes relatively lower memory to run, though it can result in overfitting for a small dataset. The LGBM classifier is becoming increasing popular because of its low memory usage and faster computational speed. It was first introduced by Microsoft in 2017 [[4]](https://pub.tik.ee.ethz.ch/students/2017-HS/SA-2017-98.pdf) and since then it has become a de-facto algorithm for multiple Kaggle competitions.
 
 We used the sklearn LGBMClassifier function to implement the model. Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
@@ -331,7 +331,7 @@ Track number of false positives and number of false negatives and raise alarm if
 1. [https://www.kaggle.com/c/ieee-fraud-detection/data](https://www.kaggle.com/c/ieee-fraud-detection/data)
 2. [https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841)
 3. [https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda](https://www.kaggle.com/kyakovlev/ieee-fe-with-some-eda)
-4. Kamil Belkhayat Abou Omar. "XGBoost and LGBM for Porto Seguros Kaggle challenge A comparison. " 2017. pdf.
+4. [https://pub.tik.ee.ethz.ch/students/2017-HS/SA-2017-98.pdf](https://pub.tik.ee.ethz.ch/students/2017-HS/SA-2017-98.pdf)
 5. [https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html)
 6. [https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
 7. [https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/)
