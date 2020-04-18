@@ -146,7 +146,7 @@ We chose variables until there is a sudden dip in the Chi-Square scores.
 
 Figure 5. Chi-Square values for the features in descending order
 
-<img src="Chisqtest.png" align="center" width="400"/>
+<img src="Chisqtest.png" align="center" width="600"/>
 
 
 **ANOVA Test**
