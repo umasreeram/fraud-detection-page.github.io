@@ -126,9 +126,7 @@ Clustered undersampling involves clustering samples of the majority class, then 
 We first performed inferential feature selection to reduce computational complexity of clustering high dimensional data.
 
 #### Feature selection (Chi-Squared/ ANOVA tests)
-Inferential feature selection aims to select variables which are highly dependent on the response variable.
-
-In our case, our response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
+Inferential feature selection aims to select variables which are highly dependent on the response variable. In our case, the response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
 
 **Chi-squared Test**
 
