@@ -6,7 +6,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
-_Table 1: Unmasked Features_
+Table 1: Unmasked Features
 
 | Feature Name  | Description 
 | ------------- | ------------- 
@@ -19,9 +19,11 @@ _Table 1: Unmasked Features_
 | DeviceType | desktop or mobile
 | DeviceInfo | specific machine (e.g. MacBook)
 
+
+
 The meaning of the following features are masked but Vesta has provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
 
-_Table 2: Masked Features_
+Table 2: Masked Features
 
 | Feature Category  | Description 
 | ------------------- | ------------- 
@@ -33,6 +35,8 @@ _Table 2: Masked Features_
 | M1-M9 | match, such as names on card and address, etc.
 | Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
 
+
+
 ## Missing Data
 
 All except 20 features have some missing values. We drop features where 90-100% of the values are missing. Since our dataset is so large and most of our features are masked, we decide to not pursue any complex data imputation techniques. For models that can't handle missing values such as logisitic regression, we fill NAs with 0. For models that can handle missing values such as XGBoost, we experiment with leaving missing values as is and filling missing values with -999. -999 is well outside the range of typical values and we believe that the model will be able to distinguish these values as missing and ignore them. 
@@ -43,9 +47,11 @@ Many of our features are derived from each other so our predictors are highly mu
 
 Although non-Vxxx features (features that are not the Vxxx features) are also multicolinear, we are slightly hesitant to drop them. The non-Vxxx features represent actual data that might be useful in distinguishing between fraud and not fraud. We experiment with two versions of the data, one with all non-Vxxx columns included and another with multicollinear non-Vxxx columns dropped.
 
-_Figure 1: C features correlation matrix_
+Figure 1: C features correlation matrix
 
 <img src="C_corrplot.png" alt="CorrPlot" width="725"/>
+
+
 
 ## Feature Engineering
 
@@ -55,12 +61,14 @@ The dataset does not provide a unique user id, so we identify 3 possible combina
 
 After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
-_Table 3: Different Datasets_
+Table 3: Different Datasets
 
 |        | keeping all non-Vxxx features | dropping multicollinear non-Vxxx features |
 | -------------  | -------------  | ------------- |
 | keeping NA values | X1 | X2
 | filling NA values | X3 | X4
+
+
 
 # Methodology
 
@@ -69,9 +77,9 @@ To perform the fraud detection task, we experimented two distinct classification
 
 Figure 2 shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
 
-_Figure 2. Nested Validation Methodology Diagram_
-
+Figure 2. Nested Validation Methodology Diagram
 <img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
+
 
 ## Parameter Optimization
 
@@ -91,9 +99,10 @@ Before fitting any model, we wanted to ensure we are feeding the model a balance
 
 Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
 
-_Figure 3. Distribution of response variable in our dataset_
+Figure 3. Distribution of response variable in our dataset
 
 <img src="unbalanced.png" align="center" width="500"/>
+
 
 There are 2 ways to handle this:
 
@@ -132,12 +141,13 @@ Figure 4. Chi-Squared Test formula
 
 <img src="chiformula.png" align="center" width="200"/>
 
+
 When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
 Hence, higher the Chi-Square value the feature is more dependent on the response and it can be selected for model training.
 
 We chose variables until there is a sudden dip in the chi-squared scores.
 
-_Figure 5. Chi-Square values for the features in descending order_
+Figure 5. Chi-Square values for the features in descending order
 
 <img src="Chisqtest.png" align="center" width="400"/>
 
@@ -155,6 +165,7 @@ Figure 6. F values for the features in descending order
 
 <img src="Anova.png" align="center" width="400"/>
 
+
 We then implemented the clustering using KMediods.
 
 #### Clustering by K Medoids
@@ -162,7 +173,7 @@ We then implemented the clustering using KMediods.
 The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
  
  
-_Figure 7. Difference between k-means and k-medoids_
+Figure 7. Difference between k-means and k-medoids
 
 <img src="kmeanskmedoids_2.png" />
 
@@ -175,12 +186,13 @@ From the models described below, only Logistic Regression needs data that is bal
 
 Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
 
-_Figure 8. Sigmoid curve_
+
+Figure 8. Sigmoid curve
 
 <img src="sigmoid3.png" align="center" width="300"/>
 
-Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated can be written as:
 
+Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated can be written as:
 
 <img src="logodds.png" align="center" width="300"/>
 
@@ -229,7 +241,7 @@ We set up an AWS EC2 instance with GPU to train the model. This allows us to tak
 
 Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
 
-_Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost_
+Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
 
 | Hyperparameters  | Impact on model | Importance |Tuned in RF|Tuned in LGBM|Tuned in XGBoost|
 | ------------- | ------------- |------------- | :-------------: | :-------------:|:-------------: |
@@ -253,22 +265,25 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models(Figure 9). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
-_Figure 9 ROC curve of all models_
+Figure 9. ROC curve of all models
 
 <img src="ROC.png" width="500"/>
 
-_Table 5. Results of all models_
+
+Table 5. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Parameters Used| C=10, max_iter=17004, penalty='l2', solver='saga  | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| n_estimators = 607, max_depth = 481, learning_rate = 0.164, colsample_bytree = 0.760, subsample = 0.742, min_child_weight = 1.018, min_data_in_leaf = 120, num_leaves 615, reg_alpha = 3, reg_lambda = 878| n_estimators = 200, max_depth = 12, learning_rate = 0.126, colsample_bytree = 0.8, subsample = 1, gamma = 0, scale_pos_weight = 5.26, tree_method='gpu_hist', eval_metric='auc', objective='binary:logistic'|
-| Training AUC Score|  0.8708 | | 0.965 |1.0000|
+| Training AUC Score|  0.8708 |0.9669 | 0.9650 |1.0000|
 | Validation AUC Score| 0.8651  | 0.9546 |0.9695 |0.9747|
-| Training Time`| 3600 secs | 2700 secs | 623 secs| 200 secs *|
+| Training Time`| 3600 secs | 2700 secs | 623 secs| 200 secs*|
 | Prediction Time`| 120 secs | 600 secs | 96 secs |32 secs|
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
+
 *On CPU-only machine for better comparison, model training, prediction and parameter tuning is done on cloud instance with GPU
+
 
 Figure 10 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
 
