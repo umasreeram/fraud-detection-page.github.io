@@ -6,7 +6,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
-##### _Table 1: Unmasked Features_
+_Table 1: Unmasked Features_
 
 | Feature Name  | Description 
 | ------------- | ------------- 
@@ -21,7 +21,7 @@ The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided b
 
 The meaning of the following features are masked but Vesta has provided the following high level descriptions about the feature categories. Note the examples below are for illustrative purposes only and these specific features may not exist in the data.
 
-__Table 2: Masked Features__
+_Table 2: Masked Features_
 
 | Feature Category  | Description 
 | ------------------- | ------------- 
@@ -55,12 +55,12 @@ The dataset does not provide a unique user id, so we identify 3 possible combina
 
 After addressing missing values, multicolinearity, and feature engineering we have the following datasets:
 
-Table 3: Different Datasets
+_Table 3: Different Datasets_
 
 |        | keeping all non-Vxxx features | dropping multicollinear non-Vxxx features |
 | -------------  | -------------  | ------------- |
-| **keeping NA values** | X1 | X2
-| **filling NA values** | X3 | X4
+| keeping NA values | X1 | X2
+| filling NA values | X3 | X4
 
 # Methodology
 
@@ -91,7 +91,7 @@ Before fitting any model, we wanted to ensure we are feeding the model a balance
 
 Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
 
-Figure 3. Distribution of response variable in our dataset
+_Figure 3. Distribution of response variable in our dataset_
 <img src="unbalanced.png" align="center" width="300"/>
 
 There are 2 ways to handle this:
@@ -136,7 +136,7 @@ Hence, higher the Chi-Square value the feature is more dependent on the response
 
 We chose variables until there is a sudden dip in the chi-squared scores.
 
-Figure 5. Chi-Square values for the features in descending order
+_Figure 5. Chi-Square values for the features in descending order_
 
 <img src="Chisqtest.png" align="center" width="400"/>
 
@@ -161,7 +161,7 @@ We then implemented the clustering using KMediods.
 The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
  
  
-Figure 7. Difference between K Means and K Medoids
+_Figure 7. Difference between k-means and k-medoids_
 
 <img src="k1k2.jpg" />
 
@@ -174,7 +174,7 @@ From the models described below, only Logistic Regression needs data that is bal
 
 Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
 
-Figure 8. Sigmoid curve
+_Figure 8. Sigmoid curve_
 
 <img src="sigmoid3.png" align="center" width="300"/>
 
@@ -184,18 +184,6 @@ Logistic regression is a linear method, but the predictions are transformed usin
 <img src="logodds.png" align="center" width="300"/>
 
 Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
-
-Table 4: Listing of Logistic Regression hyperparameters tuned
-
-| Hyperparameters  | Impact on model | Tuned value |
-| ------------- | ------------- | ------------- |
-| C | Inverse of regularization strength; must be a positive float. Like in support vector machines, smaller values specify stronger regularization| 10|
-| max_iter | Maximum number of iterations taken for the solvers to converge | 17004|
-| penalty | Used to specify the norm used in the penalization. Performs shrinkage of coefficients | l2 |
-| solver | Algorithm to use in the optimization problem | 'saga'|
-
-
-
 
 ## Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
@@ -240,10 +228,10 @@ We set up an AWS EC2 instance with GPU to train the model. This allows us to tak
 
 Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
 
-Table 5. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
+_Table 4. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost_
 
 | Hyperparameters  | Impact on model | Importance |Tuned in RF|Tuned in LGBM|Tuned in XGBoost|
-| ------------- | ------------- |------------- | ------------- | ------------- |------------- |
+| ------------- | ------------- |------------- | :-------------: | :-------------:|:-------------: |
 | Number of iterations | Higher value increases complexity of the model, making the model more likely to overfit.| High|X|X|X|
 |Learning rate| Impacts the duration needed for the model to converge and performance of the model. | High||X|X|
 |Maximum depth| Maximum depth of each trained tree. Higher value increases complexity of the model, making the model more likely to overfit. | High|X|X|X|
@@ -264,11 +252,11 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models(Figure 9). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
-Figure 9 ROC curve of all models
+_Figure 9 ROC curve of all models_
 
 <img src="ROC.png" width="500"/>
 
-Table 6. Results of all models
+_Table 5. Results of all models_
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
