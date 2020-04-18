@@ -245,8 +245,6 @@ This is a ratio between positive samples and negative samples calculated from th
 3. **Train on cloud.**
 We set up an AWS EC2 instance with GPU to train the model. This allows us to take advantage of the GPU histogram estimator and GPU predictor functions in the XGBoost module. Taking our base model as an example, this successfully decreases the training time from 58 minutes to under 3 minutes (95% decrease), and the prediction time from 2 minutes to under 8 seconds(93% decrease).
 
-It is particularly computationally expensive to tune the hyperparameters of the XGBoost estimator. Parameters that are fundamental to the structure of the model, such as learning rate, number and complexity of trees, are prioritized for tuning (Table X). Some parameters work cumulatively, an example will be "colsample_bytree", "colsample_bylevel" and "colsample_bynode". In these scenarios, it is more efficient to tune one parameter than to tune numerous combinations of three parameters.
-
 Training the tuned XGBoost model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9747* and *0.9739* respectively, higher than other models. 
 
 Table 5. Ranked listing of hyperparameters tuned for Random Forest, LGBM and XGBoost
@@ -281,25 +279,27 @@ Table X. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Parameters Used| C=10, max_iter=17004, penalty='l2', solver='saga  | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
-| Training AUC Score|  0.8708 | | 0.965 |   |
-| Validation AUC Score| 0.8651  | 0.9546 |0.9695 |   |
-| Training Time`| 60m | 45m | 623s|   |
-| Prediction Time`| 2m | 10m |96s|   |
-| Parameter Tuning Time/ Iterations| 300minutes | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
+| Parameters Used| C=10, max_iter=17004, penalty='l2', solver='saga  | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| n_estimators = 607, max_depth = 481, learning_rate = 0.164, colsample_bytree = 0.760, subsample = 0.742, min_child_weight = 1.018, min_data_in_leaf = 120, num_leaves 615, reg_alpha = 3, reg_lambda = 878| n_estimators = 200, max_depth = 12, learning_rate = 0.126, colsample_bytree = 0.8, subsample = 1, gamma = 0, scale_pos_weight = 5.26, tree_method='gpu_hist', eval_metric='auc', objective='binary:logistic'|
+| Training AUC Score|  0.8708 | | 0.965 |1.0000|
+| Validation AUC Score| 0.8651  | 0.9546 |0.9695 |0.9747|
+| Training Time`| 3600 secs | 2700 secs | 623 secs| 200 secs *|
+| Prediction Time`| 120 secs | 600 secs | 96 secs |32 secs|
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
+*On CPU-only machine for better comparison, model training, prediction and parameter tuning is done on cloud instance with GPU
 
 Figure X shows the top 60 features that are found to be most important across models. 
 
 Different models are using different set of features for prediction (Figure X). Some interesting insights include:
 
 **1. XGBoost uses a smaller subset of features as compared to other models.**
+
 Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model.
 
 Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
 
 **2. User-level features are found to be helpful in 2 out of 4 models.**
+
 Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
 Figure X Feature importance across models
