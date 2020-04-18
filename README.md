@@ -58,8 +58,8 @@ After addressing missing values, multicolinearity, and feature engineering we ha
 Table 3: Different Datasets
 |        | keeping all non-Vxxx features  | dropping multicollinear non-Vxxx features|
 | -------------  | -------------  | ------------- |
-| **keeping NA values** | X1 | X2
-| **filling NA values** | X3 | X4
+| keeping NA values | X1 | X2
+| filling NA values | X3 | X4
 
 # Methodology
 
