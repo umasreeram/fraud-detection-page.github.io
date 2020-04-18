@@ -33,11 +33,11 @@ Table 2: Masked Features
 | M1-M9 | match, such as names on card and address, etc.
 | Vxxx | Vesta engineered rich features, including ranking, counting, and other entity relations
 
-### Missing Data
+## Missing Data
 
 All except 20 features have some missing values. We drop features where 90-100% of the values are missing. Since our dataset is so large and most of our features are masked, we decide to not pursue any complex data imputation techniques. For models that can't handle missing values such as logisitic regression, we fill NAs with 0. For models that can handle missing values such as XGBoost, we experiment with leaving missing values as is and filling missing values with -999. -999 is well outside the range of typical values and we believe that the model will be able to distinguish these values as missing and ignore them. 
 
-### Multicollinearity
+## Multicollinearity
 
 Many of our features are derived from each other so our predictors are highly multicollinear. Because we want to extract feature importance from our models, we need to reduce multicollinearity. Since the Vxxx features are engineered features and not actual data, we drop one of every two highly correlated features (e.g. correlation > 0.75 or correlation < -0.75). We drop the feature with fewer number of unqiue values, the intuition being that the feature with greater number of unqiue values contains more "granular" data. 
 
@@ -47,7 +47,7 @@ Figure 1: C features correlation matrix
 
 <img src="C_corrplot.png" alt="CorrPlot" width="725"/>
 
-### Feature Engineering
+## Feature Engineering
 
 Our dataset is at the transaction level and our models try to find patterns that distinguish fraudulent behavior from normal behavior. However, fraudulent behavior might differ for each user and one user's fradulent behavior may be another user's normal behavior. We want to identify a unique user id and see how rare or common a transaction is for that specific user. Adding features that represent user level statistics (i.e. mean, standard deviation) can help our model find those patterns. This method of feature engineering is common in LGBMs (Light Gradient Boosting Machine) and is discussed in detail by Chris Deotte [[2]](https://www.kaggle.com/c/ieee-fraud-detection/discussion/108575#latest-641841). 
 
@@ -64,7 +64,7 @@ Table 3: Different Datasets
 
 # Methodology
 
-### Hyperparamter Tuning and Model Selection
+## Hyperparamter Tuning and Model Selection
 To perform the fraud detection task, we experimented two distinct classification approaches, including regression and tree-based. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
 
 Figure 2 shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
@@ -73,22 +73,19 @@ Figure 2. Nested Validation Methodology Diagram
 
 <img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
 
-
-
-### Parameter Optimization
+## Parameter Optimization
 
 Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. These guesses are based on the algorithm's statistical estimations on probability, expected score improvement and lower confidence bound. Comparing to commonly known methods like Grid Search and Randomized Search, Bayesian optimization search achieves a lower run-time with relatively good performance.
 
-### Model Performance Metrics
+## Model Performance Metrics
 Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
 
 # Experiments
 
-### Approach 1: Regression Methods
+## Approach 1: Regression Methods
 We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
 
 ### Dealing with class imbalance
-
 
 Figure 3. Distribution of response variable in our dataset
 
@@ -100,8 +97,8 @@ Data sampling provides a collection of techniques that transform a training data
 
 There are 2 ways to handle this:
 
-1. Over sampling : Duplication or replication of examples from minority class
-2. Under sampling : Restrained choosing of examples from the majority class
+1. Oversampling : Duplication or replication of examples from minority class
+2. Undersampling : Restrained choosing of examples from the majority class
 
 Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
 Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
@@ -125,7 +122,7 @@ Inferential feature selection aims to select variables which are highly dependen
 
 In our case, our response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
 
-___CHI-SQUARED TEST___
+##### Chi-squared Test:
 
 For categorical variables, we performed Chi squared test. [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/) 
 A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
@@ -145,7 +142,7 @@ Figure 5. Chi-Square values for the features in descending order
 <img src="Chisqtest.png" align="center" width="400"/>
 
 
-___ANOVA TEST___
+##### ANOVA Test
 
 Analysis of Variance is a statistical method, used to check the means of two or more groups that are significantly different from each other. It uses the F distribution to test the same.
 It assumes Hypothesis as
@@ -174,11 +171,11 @@ Figure 7. Difference between K Means and K Medoids
 <img src="k1k2.jpg" />
 
 
-**Result**
+### Result
 The dataset that was undersampled using clustering gave a much better ROC-AUC value. However, we could perform this test only on a portion of the dataset as we did not have enough computational resources to cluster the entire dataset of 590,940 and 1303 columns.
 From the models described below, only Logistic Regression needs data that is balanced. Other models account for the imbalance within themselves. 
 
-**Logistic Regression**
+### Logistic Regression
 
 Logistic regression is named for the function used at the core of the method, the logistic function. The logistic function is an S-shaped curve that can take any real-valued number and map it into a value between 0 and 1, but never exactly at those limits.
 
@@ -205,10 +202,10 @@ Table 4: Listing of Logistic Regression hyperparameters tuned
 
 
 
-### Approach 2: Tree Based Methods
+## Approach 2: Tree Based Methods
 Compared to logisitic regression, tree based methods are less susceptible to outliers and make fewer assumptions about the underlying structure of our data. So, in addition to logisitic regression, we tried tree based methods such as Random Forest, LGBM, and XGBoost. 
 
-**Random Forest**
+### Random Forest
 
 The most basic tree based model is Decision Tree - a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
 
@@ -219,7 +216,7 @@ In this project, we implemented random forest using the sklearn library "RandomF
 Random Forest was implemented on both X1 and X2 dataset. Refer to Table 3 for more details on different dataset. We observed that random forest performed on X1 slightly better than on X2 dataset with AUC-ROC score of *0.955* and *0.947* respectively. This was as expected since X1 has more features than X2, resulting in higher predictive power. Regarding to feature importance, both dataset showed relatively similar results. Although the relative order changed sligtly, the same features showed high importance such as "D1", "C13", "TransactionAMT_car1_addr1_mean", "C1", "D15", etc. 
 
  
-**LGBM**
+### LGBM
 
 LightGBM is a gradient boosting framework that uses tree-based learning by growing tress horizontally leaf wise choosing the leaf with the maximum delta. This can help reduce more loss than a level wise algorithm. The unique feature of LGBM model is that it uses **Gradient-based One-Side Sampling (GOSS)**, that splits the samples based on the largest gradients and some random samples with smaller gradients. The underlying assumption is that the data points with smaller gradients are more well-trained. Another key feature is the **Exclusive Feature Bundling (EFB)**, which investigates the sparsity of features and combines multiple features into one. It is assumed that no information loss happens, and the features are never non-zero together. These make LightGBM a speedier option compared to XGBoost.
 
@@ -232,7 +229,7 @@ It is important to note that though XGBoost appears to be more computational rob
 Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validation AUC score of *0.9695* and *0.9673* respectively. We also see that the most important features are "D1", "D15", and "D10".
 
 
-**XGBoost**
+### XGBoost
 
 XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
@@ -270,7 +267,7 @@ Class weight| Weights associated with classes in the form {class_label: weight}.
 
 # Results & Discussion 
 
-Overall, the XGBoost model using feature set X_1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
+Overall, the XGBoost model using feature set X1 has the best AUC score performance (0.9747) amongst all models(Figure X). The model is trained on the complete training set and used to predict probabilities of fraudulent transaction in the test set. Our test AUC score is satisfactory (0.9374), placing us as one of the top 100 teams out of 6200 submissions if the Kaggle competition is still open.
 
 Figure X ROC curve of all models
 
