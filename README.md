@@ -73,12 +73,12 @@ Table 3: Different Datasets
 # Methodology
 
 ## Hyperparamter Tuning and Model Selection
-To perform the fraud detection task, we experimented two distinct classification approaches, including regression and tree-based. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consits of 2 nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
+To perform the fraud detection task, we experimented with two different types of classification approaches, including regression and tree-based methods. In order to prevent data leakage and optimistic estimates of model performance, we implemented nested cross-validation (CV). Nested CV consists of two nested loops in which the inner loop is used to find the best set of hyperparameters for each candidate model and the outer loop is used to select the best model [[5]](https://www.oreilly.com/library/view/evaluating-machine-learning/9781492048756/ch04.html). Due to the complexity, computational power and financial limitation, we decided to perform hold-out sample approach instead of cross-validation.
 
 Figure 2 shows the detailed nested validation approach. In the outer loop, training data was divided randomly into dataset A and B. Dataset B was hold out for model selection while dataset A entered the inner loop for parameter tuning. Parameter tuning was performed independently for each model. Dataset A was partitioned randomly into dataset C and D. Different sets of hyperparameters were applied on dataset C and evaluated on dataset D. The inner loop outputed the best hyperparameter setting for the model. The next step was to train a new model on the entire dataset A under the best hyperparameter setting. This model was then applied on the holdout dataset B to obtain validation performance. Comparison of different models with their best hyperparameter settings on holdout dataset B yielded the best model. Once again, the final best model was trained using all training data available (A&B) under its best hyperparamter setting. Results of classifying testing data using the final best model was submitted on Kaggle.
 
 Figure 2. Nested Validation Methodology Diagram
-<img src="Methodology Diagram.png" alt="Methodology" width="1000"/>
+<img src="Methodology Diagram.png" alt="Methodology" width="1200"/>
 
 
 ## Parameter Optimization
@@ -86,55 +86,54 @@ Figure 2. Nested Validation Methodology Diagram
 Given the number of features and complexity of some machine learning methods we employed, hyperparameter tuning can be computationally and financially expensive. We have to priortize parameters to be tuned and outline a resonable search space. We used the Bayesian optimization algorithm in the Scikit-optimize module for model tuning. After each iteration, the algorithm makes an educated guess on which set of hyperparameters is most likely to improve model performance. These guesses are based on the algorithm's statistical estimations on probability, expected score improvement and lower confidence bound. Comparing to commonly known methods like Grid Search and Randomized Search, Bayesian optimization search achieves a lower run-time with relatively good performance.
 
 ## Model Performance Metrics
-Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions.
+Fraud detection is a highly imbalanced classification problem in which amount of non-fraudulent data outnumbered one of fraudulent data. In this project, area under receiving operating characteristic curve (AUC-ROC score) was used to evaluate model performance. Higher AUC indicates better model at distinguishing between fraud and non-fraud transactions. A perfect model would have an AUC score of 1, which implies that true positive rate is at 100% with false positive rate is at 0%, when all fradulent and non-fraudlent transactions are correct classified.
 
 # Experiments
 
 ## Approach 1: Regression Methods
-We began our modeling with a simple logisitic regression model which would serve as our baseline as we explored more complex methods.
+We first experimented with a simple logisitic regression model to serve as a performance baseline, as we explored more complex methods.
 
 ### Dealing with class imbalance
 
-Before fitting any model, we wanted to ensure we are feeding the model a balanced dataset. Our dataset constituted of 3.5% fraudulent transactions and the rest were non-Fraud (Figure 3). Many machine learning algorithms are designed to operate on classification data with an equal number of observations for each class. When this is not the case, algorithms can learn that very few examples are not important and can be ignored in order to achieve good performance.
+Most machine learning models algorithms for classification predictive models are designed for problems that assume an equal distribution of classes.Our dataset constitutes of 3.5% fraudulent transactions (Figure 3). If we feed the orginial dataset into the model, the algorithm may neglecting the examples from the minority class, which is against the objective of our analysis.
 
-Data sampling provides a collection of techniques that transform a training dataset in order to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modification. This allows the challenge of imbalanced classification, even with severely imbalanced class distributions, to be addressed with a data preparation method.
+We can address this problem by data resampling to balance or better balance the class distribution. Once balanced, standard machine learning algorithms can be trained directly on the transformed dataset without any modifications.
 
 Figure 3. Distribution of response variable in our dataset
 
 <img src="unbalanced.png" align="center" width="500"/>
 
 
-There are 2 ways to handle this:
+There are two ways to resample data:
 
 1. _Oversampling_ : Duplication or replication of examples from minority class
 2. _Undersampling_ : Restrained choosing of examples from the majority class
 
-Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
-Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
+Random oversampling increases the likelihood of overfitting for the minority class as we are making exact replications of minority class examples. Oversampling can also introduce bias in the model as the model gets restrained by samples in the training set, lowering its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
 
 Hence we decided to perform undersampling. There are different ways to perform undersampling:
 
 ### Random undersampling
 
-This involves randomly selecting examples from the majority class to delete from the training dataset. This has the effect of reducing the number of examples in the majority class in the transformed version of the training dataset. This process can be repeated until we have equal number of examples for each class. 
+This involves randomly selecting examples from the majority class to remove from the training set. This reduces the ratio of the majority class in the training set. This process can be repeated until we have a more balanced ratio of samples for each class. 
 
-We implemented this technique by randomly selecting data points in the non-Fraud class using the RandomUndersampler from imbalanced-learn class. The number of data points selected was equal to the number of data points in the fraud class feeding a balanced distribution to the classifier.
+We implemented this technique by randomly selecting data points in the non-fraud class using the RandomUndersampler from  the imbalanced-learn module. The number of data points selected was equal to the number of data points in the fraud class, feeding a balanced distribution to the classifier.
 
 
-### Clustered undersampling: K Medoids
-This involves performing clustering on the majority class. Specifically, the number of clusters in the majority class is set to be equal to the number of data points in the minority class. The cluster centers are then used to represent the majority class. 
+### Clustered undersampling
+Clustered undersampling involves clustering samples of the majority class, then by selecting samples from each cluster, we can obtain a sample of the majority class that is more respresentative of the population. We set the number of clusters to be equal to the number of data points in the minority class. The cluster centers extracted using K-Medoids are the samples of the majority class selected to be included in the training set.
 
-Due to the high number of dimensions, direct clustering was proving to be computationally very intensive. Hence we first performed inferential feature selection. 
+We first performed inferential feature selection to reduce computational complexity of clustering high dimensional data.
 
-#### Feature selection (Chi squared/ANOVA tests)
+#### Feature selection (Chi-Squared/ ANOVA tests)
 Inferential feature selection aims to select variables which are highly dependent on the response variable.
 
 In our case, our response variable is categorical. Numeric and categorical variables must be handled differently due to difference in the type of distributions.
 
 **Chi-squared Test**
 
-For categorical variables, we performed Chi squared test. [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/) 
-A chi-square test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
+For categorical variables, we performed Chi-squared test. [[7]](https://machinelearningmastery.com/feature-selection-with-real-and-categorical-data/) 
+A Chi-Squared test is used in statistics to test the independence of two events. Given the data of two variables, we can get observed count O and expected count E. 
 Chi-Square measures how expected count E and observed count O deviates each other.
 
 Figure 4. Chi-Squared Test formula
@@ -144,7 +143,7 @@ Figure 4. Chi-Squared Test formula
 When two features are independent, the observed count is close to the expected count, thus we will have smaller Chi-Square value. So high Chi-Square value indicates that the hypothesis of independence is incorrect.  
 Hence, higher the Chi-Square value the feature is more dependent on the response and it can be selected for model training.
 
-We chose variables until there is a sudden dip in the chi-squared scores.
+We chose variables until there is a sudden dip in the Chi-Square scores.
 
 Figure 5. Chi-Square values for the features in descending order
 
@@ -162,24 +161,24 @@ The f-score gives us an idea if there is a variance between the 2 groups of frau
 
 Figure 6. F values for the features in descending order
 
-<img src="Anova.png" align="center" width="500"/>
+<img src="Anova.png" align="center" width="600"/>
 
 
-We then implemented the clustering using KMediods.
+We then implemented clustering using KMediods.
 
-#### Clustering by K Medoids
+#### Clustering by K-medoids
 
 The K-means clustering algorithm is sensitive to outliers, because a mean is easily influenced by extreme values. K-medoids clustering is a variant of K-means that is more robust to noises and outliers. Instead of using the mean point as the center of a cluster, K-medoids uses an actual point in the cluster to represent it. Medoid is the most centrally located object of the cluster, with minimum sum of distances to other points. 
  
  
-Figure 7. Difference between k-means and k-medoids
+Figure 7. Difference between K-means and K-medoids
 
-<img src="kmeanskmedoids_2.png" width="700"/>
+<img src="kmeanskmedoids_2.png" width="600"/>
 
 
 ### Result
-The dataset that was undersampled using clustering gave a much better ROC-AUC value. However, we could perform this test only on a portion of the dataset as we did not have enough computational resources to cluster the entire dataset of 590,940 and 1303 columns.
-From the models described below, only Logistic Regression needs data that is balanced. Other models account for the imbalance within themselves. 
+The dataset that was undersampled using clustering gave a better ROC-AUC value. However, we could perform this test only on a portion of the dataset as we did not have enough computational resources to cluster the entire dataset with over 600 features columns. 
+In the models described below, only Logistic Regression used a balanced dataset. Other models inherently account for the imbalance dataset. 
 
 ### Logistic Regression
 
@@ -188,12 +187,12 @@ Logistic regression is named for the function used at the core of the method, th
 
 Figure 8. Sigmoid curve
 
-<img src="sigmoid3.png" align="center" width="700"/>
+<img src="sigmoid3.png" align="center" width="500"/>
 
 
 Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated can be written as:
 
-<img src="logodds.png" align="center" width="300"/>
+<img src="logodds.png" align="center" width="200"/>
 
 Thus the odds can be expressed as a linear combination of the predictor variables. Logistic regression models the probability of the default class, here the probability of fraud.
 
@@ -202,7 +201,7 @@ Compared to logisitic regression, tree based methods are less susceptible to out
 
 ### 2.1 Random Forest
 
-The most basic tree based model is Decision Tree - a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
+The most basic tree based model is Decision Tree- a single tree algorithm which is commonly refered as Classification and Regression Trees (CART). A Decision tree is a flowchart like tree structure, in which each internal node denotes a test on an attribute, each branch represents an outcome of the test, and each leaf node (terminal node) represents a class label. The paths from root to leaf represent classification rules. Decision at each node is made such that it maximizes the information gain or minimizes the total entropy. The decision tree is susceptible to overfitting and hence requires pruning. However, pruned decision tree is still sentitive to high variance and instability in predicting test data. To resolve this issue, bagging decision tree model is introduced where it combines multiple decision trees. 
 
 Random forest is identical to bagging decision tree except it adds additional randomness to the model. While splitting a node, instead of searching for the most important feature among all features, it searches for the best feature among a random subset of features. Therefore, in random forest, only a random subset of the features is taken into consideration by the algorithm for splitting a node. This results in a wide diversity that generally results in a better model.
 
@@ -228,7 +227,7 @@ Training the tuned LGBM model on both X1 and X2 dataset, we achieved a validatio
 
 XGBoost is a gradient boosted decision tree algorithm designed for speed and robust performance, that is known for exceptional performance in binary classification problems with a severe class imbalance. 
 
-Similar to other methods discussed above, XGBoost is a collection of decision trees with a customizable objective function. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. In each iteration, gradient descent is used to optimize the objective value. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
+Similar to other methods discussed above, XGBoost is a collection of decision trees, build sequentially to minimize the specified objective function using gradient descent. The objective function consist of a loss function and regularization term that controls predictive power and simplicity of the model respectively. A major difference that differentiates XGBoost from random forest is that XGBoost can handle missing values in the data. In each split, the model evalutes the maximum gain of allocating all data points with missing value to the left subnode versus that of the right subnode, hence assign a direction for all missing values. This atttribute brings about more convenience, as users can set up a model without imputating values or giving up model features to handle missing data. However, in practice, imputing data may improve performance of the model, especially when the quality of the dataset is low. 
 
 To accelerate our model training and evaluation process, we employed a few tactics:
 - **Using a histogram based algorthim for splitting**
@@ -290,7 +289,7 @@ Figure 10 shows the top 60 features that are found to be most important across m
 
 Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model.
 
-Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
+Models that use a smaller set of features have some key advantages, including high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
 
 **2. User-level features are found to be helpful in 2 out of 4 models.**
 
@@ -305,7 +304,9 @@ Figure 10. Feature importance across models
 # Model Deployment and Post-production Monitoring 
 
 **Determining most suitable threshold**
-THIS HAS TO BE WRITTEN.
+To deploy the fraud detection model, Vesta has to determine the respective business cost of a false positive (FP) and false negative (FN) prediction. The FP cost is the immediate and long-term loss of potential revenue, results from Vesta rejecting a transaction of a honest user. The FN cost is the chargeback cost or other penalty that Vesta is responsible for approving a fraudulent transaction. Proceeding forward, Vesta can consider two methods of determining a suitable threshold:
+1. Apply a suitable threshold on all transactions, reject all transactions above those threshold → Based on the calculated ratio between FP and FN cost, Vesta can find the optimal threshold the minimizes total cost. Any transactions with a probability higher than that threshold can be rejected.
+2. Set up different thresholds for transactions with different dolllar amounts → Depends on the pricing structure between Vesta and its vendors, the financial cost of FP and FN predictions might not be consistent across transaction amounts. For instance, fradulent transactions above a certain amount may not be covered by insurance. Vesta can categorized transactions into different bins according to the transaction amount, hence implement different thresholds for each bin. In the earlier example, big transactions might be rejected at a lower threshold (lower predicted probability to be fradulent), as Vesta is exposed to more risk.
 
 **Identify genuine changes in data**
 After deploying the fruad detection model, it is important to regularly evaluate model performance to ensure that the model is still relevant and accurate. Continuous model evaluation also drives key managerial decision such as whether or not the model has to be retrained.The first step is to know whether the data can be trusted and whether the observed changes are genuine. This can be gauged by:
