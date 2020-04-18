@@ -160,7 +160,7 @@ We choose variables until there is a sudden dip in the Chi-Squared scores.
 
 Figure 6. Chi-Square values for the features in descending order
 
-<img src="Chisqtest.png" align="center" width="600"/>
+<img src="Chisqtest.png" align="center" width="500"/>
 
 
 **ANOVA Test**
@@ -175,7 +175,7 @@ The f-score gives us an idea if there is a variance between the 2 groups of frau
 
 Figure 7. F values for the features in descending order
 
-<img src="Anova.png" align="center" width="600"/>
+<img src="Anova.png" align="center" width="500"/>
 
 
 Once number of features is reduced, we then implement clustering using KMediods.
@@ -187,7 +187,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 Figure 8. Difference between K-means and K-medoids
 
-<img src="kmeanskmedoids_2.png" width="600"/>
+<img src="kmeanskmedoids_2.png" width="500"/>
 
 
 ### Result
@@ -201,7 +201,7 @@ Compared to logistic regression, tree based methods are less susceptible to outl
 
 Figure 9. Bagging vs Boosting methods
 
-<img src="bagging_boosting.png" width="600"/>
+<img src="bagging_boosting.png" width="500"/>
 
 ### 2.1 Random Forest
 
@@ -213,7 +213,7 @@ We implemented random forest using RandomForestClassifier in the sklearn module,
 
 Figure 10. Tree building methods of LGBM and XGBoost
 
-<img src="boosting_methods.png" width="600"/>
+<img src="boosting_methods.png" width="500"/>
  
 ### 2.2 LGBM
 
@@ -265,7 +265,7 @@ Overall, the XGBoost model using feature set X1 has the best AUC score performan
 
 Figure 11. ROC curve of all models
 
-<img src="ROC.png" width="800"/>
+<img src="ROC.png" width="600"/>
 
 
 Table 5. Results of all models
