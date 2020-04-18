@@ -281,12 +281,12 @@ Table X. Results of all models
 
 |  | Logistic Regression | Random Forest | LGBM | XGBoost |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Parameters Used|   | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
-| Training AUC Score|   | 0.9546| 0.965 |   |
-| Validation AUC Score|   | |0.9695 |   |
-| Training Time`|  | 45m | 623s|   |
-| Prediction Time`|  | 10m |96s|   |
-| Parameter Tuning Time/ Iterations|  | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
+| Parameters Used| C=10, max_iter=17004, penalty='l2', solver='saga  | n_estimators = 931, max_depth = 32, max_features = 'log2', class_weight = 'balanced'| colsample_bytree = 0.760, learning_rate = 0.164, max_depth = 481, min_child_weight = 1.018, min_data_in_leaf = 120, n_estimators = 607, num_leaves 615, reg_alpha = 3, reg_lambda = 878, subsample = 0.742|  |
+| Training AUC Score|  0.8708 | 0.9546| 0.965 |   |
+| Validation AUC Score| 0.8651  | |0.9695 |   |
+| Training Time`| 60m | 45m | 623s|   |
+| Prediction Time`| 2m | 10m |96s|   |
+| Parameter Tuning Time/ Iterations| 300minutes | 200 minutes for 20 iterations | 70 minutes for 10 iterations|X minutes for X iterations |
 
 `Note that models are trained on different devcies and these efficiency metrics are not directly comparable.
 
