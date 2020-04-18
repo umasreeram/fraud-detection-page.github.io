@@ -6,7 +6,7 @@ Fraud risk is everywhere. One major sector affected by fraud risk is the e-comme
 
 The dataset [[1]](https://www.kaggle.com/c/ieee-fraud-detection/data) provided by Vesta includes identification and transaction data on a series of online payments. The data contains the following unmasked features.
 
-_Table 1: Unmasked Features_
+##### _Table 1: Unmasked Features_
 
 | Feature Name  | Description 
 | ------------- | ------------- 
