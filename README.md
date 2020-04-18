@@ -106,8 +106,8 @@ Figure 3. Distribution of response variable in our dataset
 
 There are 2 ways to handle this:
 
-1. **Oversampling** : Duplication or replication of examples from minority class
-2. **Undersampling** : Restrained choosing of examples from the majority class
+1. _Oversampling_ : Duplication or replication of examples from minority class
+2. _Undersampling_ : Restrained choosing of examples from the majority class
 
 Random oversampling increases the likelihood of overfitting for the minority class as we end up making exact repplications of minority class examples.
 Oversampling can also bring in bias into the system because it gets restrained in the examples taught to it lessening its ability to generalize to a standard dataset.[[6]](https://machinelearningmastery.com/random-oversampling-and-undersampling-for-imbalanced-classification/)
@@ -138,7 +138,6 @@ A chi-square test is used in statistics to test the independence of two events. 
 Chi-Square measures how expected count E and observed count O deviates each other.
 
 Figure 4. Chi-Squared Test formula
-
 <img src="chiformula.png" align="center" width="200"/>
 
 
@@ -163,7 +162,7 @@ The f-score gives us an idea if there is a variance between the 2 groups of frau
 
 Figure 6. F values for the features in descending order
 
-<img src="Anova.png" align="center" width="400"/>
+<img src="Anova.png" align="center" width="500"/>
 
 
 We then implemented the clustering using KMediods.
@@ -175,7 +174,7 @@ The K-means clustering algorithm is sensitive to outliers, because a mean is eas
  
 Figure 7. Difference between k-means and k-medoids
 
-<img src="kmeanskmedoids_2.png" />
+<img src="kmeanskmedoids_2.png" width="700"/>
 
 
 ### Result
@@ -189,7 +188,7 @@ Logistic regression is named for the function used at the core of the method, th
 
 Figure 8. Sigmoid curve
 
-<img src="sigmoid3.png" align="center" width="300"/>
+<img src="sigmoid3.png" align="center" width="700"/>
 
 
 Logistic regression is a linear method, but the predictions are transformed using the logistic function. The model can be stated can be written as:
@@ -267,7 +266,7 @@ Overall, the XGBoost model using feature set X1 has the best AUC score performan
 
 Figure 9. ROC curve of all models
 
-<img src="ROC.png" width="500"/>
+<img src="ROC.png" width="800"/>
 
 
 Table 5. Results of all models
@@ -287,13 +286,13 @@ Table 5. Results of all models
 
 Figure 10 shows the top 60 features that are found to be most important across models. Different models are using different set of features for prediction. Some interesting insights include:
 
-- **XGBoost uses a smaller subset of features as compared to other models.**
+**1. XGBoost uses a smaller subset of features as compared to other models.**
 
 Logistic regression uses the highest number of features, followed by random forest and LGBM. These three algorithms use different construction methods, therefore the three models handle correlated features in the dataset differently. Taking correlated features f1 and f2 as an example, with f1 being the more useful feature that generates a higher information gain. XGBoost builds trees sequentially such that each subsequent tree aims to reduce the errors of the previous tree. Majority of XGBoost trees will correct their predecessors' mistake and split on feature f1 with more information gain. LGBM uses gradient based one side sampling, a leaf-wise growing method with results similar to XGBoost's level-wise tree growing method if the full tree is grown, and is more likely to split on feature f1 as well. In random forest, each tree is independent. With bootstrap sampling, likelihood for each tree to split on f1 and f2 can be similar. Therefore some trees might split on f1 while the others split on f2. This explains why random forest uses a higher number of features while each feature has lower feature importance. In fact, for many of the top 20 features, feature importance of LGBM is double that of random forest. A possible explanation is that these features highly correlate with other features, and that those features are included in the random forest model but not the LGBM model.
 
 Key advantages to models that use a smaller set of features include high interpretability and low computational cost. This gives the XGBoost model an extra edge, however, we can always experiment with regularization parameters of the other models to limit the feature set used.
 
-- **User-level features are found to be helpful in 2 out of 4 models.**
+**2. User-level features are found to be helpful in 2 out of 4 models.**
 
 Random forest and LGBM models have a similar feature set, that includes many engineered features that identify individual users, such as "card1_addr1_P_emaildomain" and "card1_addr1". This confirms our earlier hypothesis that fraudulent behavior can look different for individual users. By identifying the average behavior of a user, we can understand if a partiular transaction is dissimilar to the users' average behavior and estimate how likely the transaction may be fradulent. 
 
@@ -303,13 +302,16 @@ Figure 10. Feature importance across models
 <img src="matrix_40_59.png" width="1300"/>
 
 
-# Post-production Monitoring 
+# Model Deployment and Post-production Monitoring 
 
-**Monitoring the model’s performance over time**
-First step is to know if you can trust your data, only then you know that the changes shown are genuine. This can be gauged by:
+**Determining most suitable threshold**
+THIS HAS TO BE WRITTEN.
 
-1. Checking the annotation of data → Check distribution of labels, how far is that from the ground truth
-2. Checking model dependencies → if it relies on features from a package, did that implementation change? (So, if there is a drop in accuracy maybe it is not the input data that changed but the dependency component in the middle)
+**Identify genuine changes in data**
+After deploying the fruad detection model, it is important to regularly evaluate model performance to ensure that the model is still relevant and accurate. Continuous model evaluation also drives key managerial decision such as whether or not the model has to be retrained.The first step is to know whether the data can be trusted and whether the observed changes are genuine. This can be gauged by:
+
+- Checking annotations of data → Check distribution of labels, how far is that from the distribution of the training set/ ground truth
+- Checking model dependencies → if it relies on features from a package, did that implementation change? (So, if there is a drop in accuracy maybe it is not the input data that changed but the dependency component in the middle)
 
 Once we know the changes are genuine, we can set up systems to track them.
 
